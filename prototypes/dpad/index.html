@@ -89,16 +89,5 @@
   </div>
 
   <script type="module" src="./dist/assets/dpad.js"></script>
-  <script>
-    // If dist/ was never built, the module 404s — show a clear message (Live Server).
-    fetch('./dist/assets/dpad.js', { method: 'HEAD' }).then(function (r) {
-      if (!r.ok) {
-        var s = document.getElementById('status');
-        s.textContent = 'Missing build — run: cd prototypes/dpad && npm run build';
-        s.style.background = '#000';
-        s.style.color = '#fff';
-      }
-    }).catch(function () {});
-  </script>
 </body>
 </html>

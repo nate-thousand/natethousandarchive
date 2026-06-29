@@ -4,6 +4,9 @@ Thumbs.db
 # Dependencies & build output (active prototypes)
 node_modules/
 dist/
+# dpad ships a pre-built bundle so Live Server works without npm run build
+!prototypes/dpad/dist/
+!prototypes/dpad/dist/**
 .vercel/
 
 # Frozen explorations — contents stay local; README explains the rule
