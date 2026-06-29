@@ -1,0 +1,63 @@
+{
+  "version": "1.0.0",
+  "name": "Plantasonic Scene Library",
+  "description": "Metadata-only definitions of composed scenes. A scene references botanical assets by id and arranges them into layered compositions. Resolved by the Botanical Scene Graph milestone. No rendering logic here.",
+  "schema": {
+    "id": "stable scene identifier",
+    "name": "display name",
+    "mood": "target mood vector hint for the AI Director",
+    "layers": "ordered array of layer definitions (back to front)",
+    "camera": "camera preset hint",
+    "ambient": "background/lighting overrides referencing style-dna",
+    "transitionsIn": "allowed transition ids when entering this scene",
+    "transitionsOut": "allowed transition ids when leaving",
+    "notes": "freeform"
+  },
+  "scenes": [
+    {
+      "id": "intro-grove",
+      "name": "Intro Grove",
+      "mood": { "energy": 0.2, "valence": 0.7, "density": 0.3, "brightness": 0.4 },
+      "layers": [
+        { "z": 0, "assets": ["moss-cluster"], "count": 5, "behavior": "drift" },
+        { "z": 1, "assets": ["fern-unfurling"], "count": 1, "behavior": "slow-unfurl" },
+        { "z": 2, "assets": ["seed-pod"], "count": 3, "behavior": "shimmer" }
+      ],
+      "camera": "slow-push",
+      "ambient": { "vignette": 0.4, "bloom": 0.5 },
+      "transitionsIn": ["fade-in"],
+      "transitionsOut": ["vine-wipe", "dither-dissolve"],
+      "notes": "Default opening scene."
+    },
+    {
+      "id": "canopy-bloom",
+      "name": "Canopy Bloom",
+      "mood": { "energy": 0.7, "valence": 0.8, "density": 0.7, "brightness": 0.8 },
+      "layers": [
+        { "z": 0, "assets": ["monstera-leaf"], "count": 4, "behavior": "gentle-sway" },
+        { "z": 1, "assets": ["orchid-bloom"], "count": 3, "behavior": "pulse-open" },
+        { "z": 2, "assets": ["vine-tendril"], "count": 6, "behavior": "drift" }
+      ],
+      "camera": "orbit-slow",
+      "ambient": { "vignette": 0.3, "bloom": 0.7 },
+      "transitionsIn": ["vine-wipe"],
+      "transitionsOut": ["bloom-burst", "dither-dissolve"],
+      "notes": "High-energy peak scene."
+    },
+    {
+      "id": "fungal-deep",
+      "name": "Fungal Deep",
+      "mood": { "energy": 0.4, "valence": 0.4, "density": 0.6, "brightness": 0.3 },
+      "layers": [
+        { "z": 0, "assets": ["mushroom-cap"], "count": 7, "behavior": "breathe" },
+        { "z": 1, "assets": ["moss-cluster"], "count": 4, "behavior": "shimmer" },
+        { "z": 2, "assets": ["succulent-rosette"], "count": 2, "behavior": "gentle-sway" }
+      ],
+      "camera": "static-drift",
+      "ambient": { "vignette": 0.5, "bloom": 0.6 },
+      "transitionsIn": ["dither-dissolve"],
+      "transitionsOut": ["fade-out", "vine-wipe"],
+      "notes": "Dark, hypnotic low-light scene."
+    }
+  ]
+}

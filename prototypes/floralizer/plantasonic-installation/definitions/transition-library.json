@@ -1,0 +1,67 @@
+{
+  "version": "1.0.0",
+  "name": "Plantasonic Transition Library",
+  "description": "Metadata-only definitions of transitions between scenes. Referenced by scene-library.json and orchestrated by the AI Director and State Engine. No transition logic is implemented here.",
+  "schema": {
+    "id": "stable transition identifier",
+    "name": "display name",
+    "type": "fade | wipe | dissolve | burst | morph",
+    "durationMs": "default duration",
+    "easing": "easing curve id",
+    "audioCue": "optional audio behavior that can trigger or accent the transition",
+    "parameters": "tunable values",
+    "notes": "freeform"
+  },
+  "transitions": [
+    {
+      "id": "fade-in",
+      "name": "Fade In",
+      "type": "fade",
+      "durationMs": 2000,
+      "easing": "easeInOutSine",
+      "audioCue": null,
+      "parameters": { "from": "black" },
+      "notes": "Cold-start entry."
+    },
+    {
+      "id": "fade-out",
+      "name": "Fade Out",
+      "type": "fade",
+      "durationMs": 2000,
+      "easing": "easeInOutSine",
+      "audioCue": null,
+      "parameters": { "to": "black" },
+      "notes": ""
+    },
+    {
+      "id": "vine-wipe",
+      "name": "Vine Wipe",
+      "type": "wipe",
+      "durationMs": 1500,
+      "easing": "easeInOutCubic",
+      "audioCue": "flux-reach",
+      "parameters": { "asset": "vine-tendril", "direction": "diagonal" },
+      "notes": "Growing vines reveal the next scene."
+    },
+    {
+      "id": "dither-dissolve",
+      "name": "Dither Dissolve",
+      "type": "dissolve",
+      "durationMs": 1200,
+      "easing": "linear",
+      "audioCue": null,
+      "parameters": { "pattern": "bayer", "matrixSize": 8 },
+      "notes": "Uses the Style DNA dithering matrix for a signature dissolve."
+    },
+    {
+      "id": "bloom-burst",
+      "name": "Bloom Burst",
+      "type": "burst",
+      "durationMs": 900,
+      "easing": "easeOutBack",
+      "audioCue": "onset-bloom",
+      "parameters": { "intensity": 1.0 },
+      "notes": "Onset-triggered flash that swaps scenes at peak brightness."
+    }
+  ]
+}

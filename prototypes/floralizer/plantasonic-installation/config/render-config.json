@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "name": "Plantasonic Render Configuration",
+  "description": "Runtime rendering defaults for the realtime renderer. Consumed by the Realtime Renderer milestone. Values here are targets and budgets, not implementation.",
+  "display": {
+    "targetFps": 60,
+    "minAcceptableFps": 30,
+    "resolution": "auto",
+    "maxResolution": [3840, 2160],
+    "pixelRatio": "device",
+    "colorSpace": "display-p3",
+    "vsync": true
+  },
+  "pipeline": {
+    "backend": "webgl2",
+    "plannedBackends": ["webgpu"],
+    "layered": true,
+    "offscreenCompositing": true,
+    "postProcessing": ["dither", "bloom", "grain", "vignette", "chromaticAberration"]
+  },
+  "layers": {
+    "maxLayers": 12,
+    "defaultBlendMode": "screen",
+    "zSpacing": 50,
+    "parallaxEnabled": true,
+    "notes": "Layer ordering and parallax are owned by renderer/layerManager.ts."
+  },
+  "quality": {
+    "presets": {
+      "performance": { "renderScale": 0.5, "bloom": false, "maxParticles": 500 },
+      "balanced": { "renderScale": 0.75, "bloom": true, "maxParticles": 2000 },
+      "showcase": { "renderScale": 1.0, "bloom": true, "maxParticles": 8000 }
+    },
+    "default": "balanced",
+    "adaptive": true,
+    "notes": "Adaptive quality is driven by installation/performanceMode.ts based on live frame timing."
+  },
+  "camera": {
+    "fov": 45,
+    "near": 0.1,
+    "far": 5000,
+    "defaultDistance": 800,
+    "idleDrift": true,
+    "notes": "Camera behavior is owned by renderer/cameraController.ts and src/camera/."
+  },
+  "budgets": {
+    "maxDrawCalls": 400,
+    "maxTextureMemoryMB": 1024,
+    "maxAssetsInScene": 64
+  }
+}

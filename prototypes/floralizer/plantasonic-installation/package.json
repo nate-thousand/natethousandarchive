@@ -1,0 +1,24 @@
+{
+  "name": "plantasonic-installation",
+  "version": "0.1.0",
+  "private": true,
+  "description": "An AI-first, data-driven, real-time generative botanical installation. Milestone 1: foundational architecture.",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "echo \"lint configured in a later milestone\" && exit 0",
+    "test": "echo \"tests added in a later milestone\" && exit 0"
+  },
+  "keywords": [
+    "generative-art",
+    "botanical",
+    "audio-reactive",
+    "ai",
+    "installation",
+    "realtime"
+  ],
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "typescript": "^5.5.0"
+  }
+}

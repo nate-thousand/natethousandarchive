@@ -1,0 +1,50 @@
+{
+  "version": "1.0.0",
+  "name": "Plantasonic Audio Configuration",
+  "description": "Audio analysis and reactivity defaults. Consumed by the Audio Intelligence milestone. This file describes the analysis contract; it does not implement or modify the existing sound engine.",
+  "input": {
+    "sources": ["microphone", "lineIn", "internalSynth", "file"],
+    "default": "internalSynth",
+    "sampleRate": 44100,
+    "channels": 2,
+    "notes": "The sound engine itself is out of scope for this milestone and must not be changed."
+  },
+  "analysis": {
+    "fftSize": 2048,
+    "smoothingTimeConstant": 0.8,
+    "minDecibels": -90,
+    "maxDecibels": -10,
+    "features": [
+      "rms",
+      "peak",
+      "spectralCentroid",
+      "spectralFlux",
+      "zeroCrossingRate",
+      "onsets",
+      "tempo"
+    ]
+  },
+  "bands": {
+    "sub": [20, 60],
+    "bass": [60, 250],
+    "lowMid": [250, 500],
+    "mid": [500, 2000],
+    "highMid": [2000, 4000],
+    "treble": [4000, 12000],
+    "air": [12000, 20000]
+  },
+  "reactivity": {
+    "smoothing": 0.7,
+    "gain": 1.0,
+    "attack": 0.05,
+    "release": 0.25,
+    "beatSensitivity": 0.6,
+    "notes": "Mappings from these features to behaviors live in src/behavior/audioMappings.ts."
+  },
+  "mood": {
+    "enabled": true,
+    "dimensions": ["energy", "valence", "density", "brightness"],
+    "windowSeconds": 8,
+    "notes": "Mood vectors feed the AI Director to influence scene and behavior selection."
+  }
+}

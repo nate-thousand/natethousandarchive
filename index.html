@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>natethousandlabs — Prototype Index</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+    :root { --fg: #000; --bg: #fff; --muted: #666; --line: #000; --accent: #ff0000; }
+    * { box-sizing: border-box; }
+    body {
+        background: var(--bg);
+        color: var(--fg);
+        font-family: 'Roboto Mono', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+        margin: 0;
+        padding: 0 20px 60px;
+    }
+    .ascii-header {
+        white-space: pre;
+        font-size: 12px;
+        text-align: center;
+        margin: 28px 0 4px;
+    }
+    .tagline { text-align: center; color: var(--muted); margin-bottom: 24px; }
+    .container {
+        max-width: 820px;
+        margin: 0 auto;
+        border: 1px solid var(--line);
+        padding: 8px 0;
+    }
+    .item {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 16px;
+        padding: 10px 20px;
+        border-bottom: 1px dotted #ccc;
+        align-items: baseline;
+    }
+    .item:last-child { border-bottom: none; }
+    .item a {
+        color: var(--fg);
+        text-decoration: none;
+        font-weight: 600;
+    }
+    .item a:hover { color: var(--accent); }
+    .item .desc { color: var(--muted); }
+    .item .tag {
+        font-size: 11px;
+        color: var(--muted);
+        border: 1px solid #ccc;
+        padding: 0 6px;
+        margin-left: 6px;
+        white-space: nowrap;
+    }
+    .note { max-width: 820px; margin: 16px auto 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    @media (max-width: 600px) { .item { grid-template-columns: 1fr; gap: 2px; } }
+</style>
+</head>
+<body>
+
+<div class="ascii-header">
+              _   _   _                                          _ _       _         
+ _ __   __ _| |_| |_| |__   ___  _   _ ___  __ _ _ __   __| | | __ _| |__  ___ 
+| '_ \ / _` | __| __| '_ \ / _ \| | | / __|/ _` | '_ \ / _` | |/ _` | '_ \/ __|
+| | | | (_| | |_| |_| | | | (_) | |_| \__ \ (_| | | | | (_| | | (_| | |_) \__ \
+|_| |_|\__,_|\__|\__|_| |_|\___/ \__,_|___/\__,_|_| |_|\__,_|_|\__,_|_.__/|___/
+</div>
+<div class="tagline">active prototypes · open with Live Server</div>
+
+<div class="container">
+    <div class="item"><a href="prototypes/dpad/index.html">D-Pad</a><span class="desc">Plantasonic D-pad mapping — Bloom / Roots / Mold / Growth / Seed</span></div>
+    <div class="item"><a href="prototypes/drop-drop/index.html">Drop Drop</a><span class="desc">Shipped app<span class="tag">GitHub + Vercel</span></span></div>
+    <div class="item"><span style="font-weight:600">Floralizer</span><span class="desc">Generative botanical installation — M1 architecture (<code>prototypes/floralizer/plantasonic-installation/</code>, source only)</span></div>
+    <div class="item"><a href="prototypes/juno-flowers/index.html">Juno Flowers</a><span class="desc">ASCII garden synth — Juno Flow mode<span class="tag">static · Vercel</span></span></div>
+</div>
+
+<p class="note">
+    <strong>38 archived prototypes</strong> live in <code>prototypes/_archive/</code> (Plantasia explorations,
+    EQ/shapes iterations, sampler, AI card generator, etc.). That folder is gitignored and excluded from
+    Vercel — local reference only, not linked here.<br>
+    Active Plantasia app: <code>../plantasonic-xyz/</code> · Conventions:
+    <a href="prototypes/README.md">prototypes/README.md</a>
+</p>
+
+</body>
+</html>

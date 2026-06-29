@@ -1,0 +1,7 @@
+# Never deploy archived prototypes (local reference only)
+prototypes/_archive/
+
+# Dev/build artifacts inside active prototypes
+**/node_modules/
+**/dist/
+**/.vercel/

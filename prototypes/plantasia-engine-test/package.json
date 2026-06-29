@@ -1,0 +1,39 @@
+{
+  "name": "plantasia-engine-test",
+  "private": true,
+  "version": "1.2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:pixi": "VITE_RENDERER=pixi vite",
+    "start": "vite",
+    "build": "tsc -b && vite build",
+    "typecheck": "tsc -b --noEmit",
+    "validate:visual-energy": "node scripts/validate-visual-energy.mjs",
+    "validate:musical-color": "node scripts/validate-musical-color.mjs",
+    "validate:presets": "node scripts/validate-presets.mjs",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "postinstall": "npx patch-package"
+  },
+  "dependencies": {
+    "bootstrap": "5.0.2",
+    "gsap": "^3.15.0",
+    "pixi.js": "^8.19.0",
+    "plantasia-sound-engine": "github:nate-thousand/plantasia-sound-engine#v0.2.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "tone": "^15.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^24.13.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "oxlint": "^1.69.0",
+    "patch-package": "^8.0.1",
+    "sass": "^1.101.0",
+    "typescript": "~5.7.2",
+    "vite": "^6.0.3"
+  }
+}

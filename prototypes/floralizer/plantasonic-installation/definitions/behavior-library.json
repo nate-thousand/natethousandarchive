@@ -1,0 +1,121 @@
+{
+  "version": "1.0.0",
+  "name": "Plantasonic Behavior Library",
+  "description": "Metadata-only catalog of reusable audio and motion behaviors. Behaviors are referenced by id from botanical-assets.json and resolved at runtime by the Behavior Engine. No behavior logic is implemented here.",
+  "schema": {
+    "id": "stable identifier referenced by assets",
+    "type": "audio | motion",
+    "description": "what the behavior does",
+    "inputs": "audio features or scene signals the behavior consumes",
+    "parameters": "tunable values with sensible defaults",
+    "notes": "freeform"
+  },
+  "audioBehaviors": [
+    {
+      "id": "bass-pulse",
+      "type": "audio",
+      "description": "Scales glow and size with low-frequency energy.",
+      "inputs": ["bands.bass", "rms"],
+      "parameters": { "gain": 1.0, "smoothing": 0.7 },
+      "notes": ""
+    },
+    {
+      "id": "sub-throb",
+      "type": "audio",
+      "description": "Slow heavy breathing tied to sub frequencies.",
+      "inputs": ["bands.sub"],
+      "parameters": { "gain": 1.2, "smoothing": 0.85 },
+      "notes": ""
+    },
+    {
+      "id": "mid-shimmer",
+      "type": "audio",
+      "description": "Surface shimmer driven by midrange content.",
+      "inputs": ["bands.mid", "spectralFlux"],
+      "parameters": { "gain": 0.8, "smoothing": 0.6 },
+      "notes": ""
+    },
+    {
+      "id": "air-shimmer",
+      "type": "audio",
+      "description": "Fine high-frequency sparkle on filaments and spores.",
+      "inputs": ["bands.air", "bands.treble"],
+      "parameters": { "gain": 0.6, "smoothing": 0.5 },
+      "notes": ""
+    },
+    {
+      "id": "treble-edge",
+      "type": "audio",
+      "description": "Edge highlight intensity follows treble energy.",
+      "inputs": ["bands.treble"],
+      "parameters": { "gain": 0.7, "smoothing": 0.55 },
+      "notes": ""
+    },
+    {
+      "id": "onset-bloom",
+      "type": "audio",
+      "description": "Triggers a bloom burst on detected onsets.",
+      "inputs": ["onsets"],
+      "parameters": { "sensitivity": 0.6, "cooldownMs": 250 },
+      "notes": "Drives bloom/open motion behaviors."
+    },
+    {
+      "id": "flux-reach",
+      "type": "audio",
+      "description": "Reaching/extension amount follows spectral flux.",
+      "inputs": ["spectralFlux"],
+      "parameters": { "gain": 0.9, "smoothing": 0.65 },
+      "notes": ""
+    }
+  ],
+  "motionBehaviors": [
+    {
+      "id": "slow-unfurl",
+      "type": "motion",
+      "description": "One-shot unfurl animation that idles in a breathing loop.",
+      "inputs": ["time", "audioEnergy"],
+      "parameters": { "durationMs": 4000, "easing": "easeInOutSine" },
+      "notes": ""
+    },
+    {
+      "id": "gentle-sway",
+      "type": "motion",
+      "description": "Continuous low-frequency sway as if in a breeze.",
+      "inputs": ["time"],
+      "parameters": { "amplitude": 0.05, "frequencyHz": 0.2 },
+      "notes": ""
+    },
+    {
+      "id": "shimmer",
+      "type": "motion",
+      "description": "High-frequency micro-jitter on emissive detail.",
+      "inputs": ["time", "audioEnergy"],
+      "parameters": { "amplitude": 0.02, "frequencyHz": 6 },
+      "notes": ""
+    },
+    {
+      "id": "breathe",
+      "type": "motion",
+      "description": "Slow scale pulsing simulating respiration.",
+      "inputs": ["time"],
+      "parameters": { "amplitude": 0.04, "frequencyHz": 0.15 },
+      "notes": ""
+    },
+    {
+      "id": "drift",
+      "type": "motion",
+      "description": "Slow positional drift along a noise field.",
+      "inputs": ["time", "noise"],
+      "parameters": { "speed": 0.1, "range": 0.2 },
+      "notes": "Used for transition motifs."
+    },
+    {
+      "id": "pulse-open",
+      "type": "motion",
+      "description": "Opening/blooming gesture triggered by audio onsets.",
+      "inputs": ["trigger", "audioEnergy"],
+      "parameters": { "durationMs": 800, "easing": "easeOutBack" },
+      "notes": "Commonly paired with onset-bloom."
+    }
+  ]
+}

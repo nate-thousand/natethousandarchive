@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D-pad · Plantasonic Mapping</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#000; --muted:#666; --line:#000; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Space Mono', monospace; background:#fff; color:#000;
+      display:flex; flex-direction:column; align-items:center; padding:24px 16px 48px;
+    }
+    h1 { font-size:22px; font-weight:700; letter-spacing:1px; }
+    .sub { font-size:11px; color:var(--muted); margin-top:6px; text-align:center; max-width:520px; line-height:1.6; }
+    .panel { width:100%; max-width:520px; border:1px solid var(--line); padding:20px; margin-top:20px; }
+    .status { text-align:center; font-size:12px; font-weight:700; border:1px solid var(--line); padding:10px; margin-bottom:16px; }
+    .status.ready { background:#000; color:#fff; }
+    .start-btn {
+      width:100%; padding:14px; font-family:inherit; font-weight:700; font-size:14px;
+      background:#000; color:#fff; border:1px solid #000; cursor:pointer; margin-bottom:16px;
+    }
+    .start-btn[hidden] { display:none; }
+
+    .debug { display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:11px; margin-bottom:18px; }
+    .debug div { border:1px solid var(--line); padding:8px; }
+    .debug .lbl { display:block; color:var(--muted); font-size:9px; margin-bottom:4px; letter-spacing:0.5px; }
+    .debug .full { grid-column:1 / -1; }
+
+    .dpad-wrap { display:flex; justify-content:center; margin-bottom:16px; }
+    #dpad { display:grid; grid-template-columns:repeat(3,72px); grid-template-rows:repeat(3,72px); gap:8px; }
+    #dpad button {
+      font-family:inherit; font-weight:700; font-size:12px; background:#fff; border:1px solid #000; cursor:pointer;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; touch-action:none; user-select:none;
+    }
+    #dpad button.active { background:#000; color:#fff; }
+    #dpad .sp { border:none; background:transparent; pointer-events:none; }
+    #dpad button small { font-size:8px; color:var(--muted); margin-top:3px; font-weight:400; }
+    #dpad button.active small { color:#fff; }
+
+    .panic {
+      width:100%; padding:12px; font-family:inherit; font-weight:700; font-size:12px;
+      background:#fff; border:1px solid #000; cursor:pointer;
+    }
+    .help { max-width:520px; margin-top:16px; font-size:10px; color:var(--muted); line-height:1.8; }
+    kbd { border:1px solid #000; padding:0 4px; font-size:9px; }
+  </style>
+</head>
+<body>
+  <h1>D-PAD · PLANTASONIC</h1>
+  <p class="sub">Seed sound world · UP Bloom · DOWN Roots · LEFT Mold · RIGHT Growth · CENTER Seed pulse<br>Short press = impulse · Hold = ramp · Release = ease back · Double tap = burst</p>
+
+  <div class="panel">
+    <button id="startBtn" class="start-btn">▶ START SEED WORLD</button>
+    <div id="status" class="status">Tap start, then use arrow keys</div>
+
+    <div class="debug">
+      <div class="full"><span class="lbl">ACTIVE DIRECTION</span><span id="activeDir">—</span></div>
+      <div><span class="lbl">BLOOM</span><span id="bloomVal">0.48</span></div>
+      <div><span class="lbl">ROOTS</span><span id="rootsVal">0.35</span></div>
+      <div><span class="lbl">MOLD</span><span id="moldVal">0.12</span></div>
+      <div><span class="lbl">GROWTH</span><span id="growthVal">0.42</span></div>
+      <div><span class="lbl">BACTERIA</span><span id="bacteriaVal">0.18</span></div>
+      <div class="full"><span class="lbl">LAST EVENT</span><span id="lastEvent">idle</span></div>
+    </div>
+
+    <div class="dpad-wrap">
+      <div id="dpad">
+        <span class="sp"></span>
+        <button data-dir="up">↑<small>BLOOM</small></button>
+        <span class="sp"></span>
+        <button data-dir="left">←<small>MOLD</small></button>
+        <button data-dir="center">●<small>SEED</small></button>
+        <button data-dir="right">→<small>GROWTH</small></button>
+        <span class="sp"></span>
+        <button data-dir="down">↓<small>ROOTS</small></button>
+        <span class="sp"></span>
+      </div>
+    </div>
+
+    <button id="panicBtn" class="panic">◼ PANIC — ALL NOTES OFF</button>
+  </div>
+
+  <div class="help">
+    <p><kbd>↑</kbd> Bloom · <kbd>↓</kbd> Roots · <kbd>←</kbd> Mold · <kbd>→</kbd> Growth · <kbd>Space</kbd> Seed pulse</p>
+    <p>Hold a direction to ramp its control. Release to ease back. Double-tap for a burst. Double-tap <kbd>Space</kbd> resets baseline.</p>
+    <p>Gamepad: D-pad = directions · Cross/A = Seed pulse</p>
+  </div>
+
+  <script type="module" src="./dist/assets/dpad.js"></script>
+  <script>
+    // If dist/ was never built, the module 404s — show a clear message (Live Server).
+    fetch('./dist/assets/dpad.js', { method: 'HEAD' }).then(function (r) {
+      if (!r.ok) {
+        var s = document.getElementById('status');
+        s.textContent = 'Missing build — run: cd prototypes/dpad && npm run build';
+        s.style.background = '#000';
+        s.style.color = '#fff';
+      }
+    }).catch(function () {});
+  </script>
+</body>
+</html>

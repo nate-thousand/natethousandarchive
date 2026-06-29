@@ -1,0 +1,16 @@
+export {
+  buildJunoSynthState,
+  createJunoLiveVoice,
+  ensureJunoRuntime,
+  releaseJunoVoice,
+  setJunoModeActive,
+  stopAllJunoVoices,
+  syncJunoBotanical,
+  tickJunoLivingVoice,
+  toJunoEnginePreset,
+  applyJunoMold,
+  type JunoBotanicalGraph,
+  type JunoEnginePreset,
+  type JunoLiveVoice,
+  type JunoSynthState,
+} from 'plantasia-sound-engine';

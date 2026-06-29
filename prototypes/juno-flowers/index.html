@@ -1,0 +1,2330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Juno Flowers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Juno Flowers is a focused ASCII garden synth built around the Juno Flow visual experience and Juno Flowers sound." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3IDhpRTl5bYT10iB8/vXvz4i7//IN/J9slAg8fbstDw=="
+        crossorigin="anonymous">
+  <link href="custom.css" rel="stylesheet">
+</head>
+<body class="plantasia-app welcome-active">
+<div id="welcomeScreen" class="welcome-screen" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle" tabindex="-1">
+  <canvas id="welcomePollen" class="welcome-screen__pollen" aria-hidden="true"></canvas>
+  <div class="welcome-screen__glow" aria-hidden="true"></div>
+  <div class="welcome-screen__scanlines" aria-hidden="true"></div>
+  <div class="welcome-screen__content" id="welcomeStartArea">
+    <h1 id="welcomeTitle" class="visually-hidden">Juno Flowers</h1>
+    <pre class="welcome-screen__ascii" aria-hidden="true">██████╗ ██╗      █████╗ ███╗   ██╗████████╗ █████╗ ███████╗██╗ █████╗
+██╔══██╗██║     ██╔══██╗████╗  ██║╚══██╔══╝██╔══██╗██╔════╝██║██╔══██╗
+██████╔╝██║     ███████║██╔██╗ ██║   ██║   ███████║███████╗██║███████║
+██╔═══╝ ██║     ██╔══██║██║╚██╗██║   ██║   ██╔══██║╚════██║██║██╔══██║
+██║     ███████╗██║  ██║██║ ╚████║   ██║   ██║  ██║███████║██║██║  ██║
+╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝╚═╝  ╚═╝</pre>
+    <button type="button" class="welcome-screen__cta" id="welcomeStartBtn">
+      PRESS ENTER TO START EXPERIENCE
+    </button>
+  </div>
+</div>
+
+<div id="appRoot" class="app-root" aria-hidden="true">
+<canvas id="waveCanvas" role="img" aria-label="Live audio waveform or plant growth visualization"></canvas>
+
+<div id="playGuide" class="play-guide" role="dialog" aria-modal="true" aria-labelledby="playGuideTitle" hidden aria-hidden="true">
+  <div class="play-guide__backdrop" id="playGuideBackdrop" aria-hidden="true"></div>
+  <div class="play-guide__panel">
+    <header class="play-guide__header">
+      <h2 id="playGuideTitle" class="play-guide__title">How to Play</h2>
+      <button type="button" id="playGuideClose" class="play-guide__close btn-close-synth" aria-label="Close how to play dialog">&times;</button>
+    </header>
+    <div class="play-guide__body">
+      <p>Use your computer keyboard to play Juno Flowers.</p>
+      <p class="play-guide__label">25-key chromatic map (C3–C5) — same as MPK Mini:</p>
+      <p class="play-guide__hint">Lower row C3–B3:</p>
+      <p class="play-guide__keys play-guide__keys--main" aria-label="Keys Z through M">Z S X D C V G B H N J M</p>
+      <p class="play-guide__hint">Upper row C4–C5:</p>
+      <p class="play-guide__keys play-guide__keys--alt" aria-label="Keys Q through I with number black keys">Q 2 W 3 E R 5 T 6 Y 7 U I</p>
+      <p class="play-guide__hint">Digits 2, 3, 5, 6, 7 are the black keys between the letters.</p>
+    </div>
+  </div>
+</div>
+
+<aside id="dataPanel" class="data-panel inspector is-collapsed" aria-label="Parameter data panel">
+  <header class="data-panel__header inspector__header">
+    <h2 class="data-panel__title inspector__title" id="dataPanelLabel">Diagnostics</h2>
+    <button id="closeDataPanel" class="data-panel__close btn-close-synth" type="button" aria-label="Collapse data panel">&times;</button>
+  </header>
+  <pre id="infoDisplay" class="data-panel__body inspector__body" role="status" aria-live="polite"></pre>
+</aside>
+
+<nav class="stage-toolbar" aria-label="Stage controls">
+  <button id="openDrawer" class="btn btn-outline-light stage-btn stage-btn--menu drawer-toggle-btn" type="button"
+          aria-label="Open control surface" aria-expanded="false" aria-controls="drawer">
+    <span class="stage-btn__label" aria-hidden="true">&#9776;</span>
+    <span class="visually-hidden">Controls</span>
+  </button>
+</nav>
+<aside class="ui closed" id="drawer" role="region" aria-label="Synth control surface">
+  <header class="deck__header">
+    <div class="deck__brand">
+      <h1 class="deck__title">Juno Flowers</h1>
+      <p class="deck__subtitle">ASCII garden synthesizer</p>
+    </div>
+    <div class="deck__actions">
+      <button id="openPlayGuide" class="deck__help" type="button" aria-label="Open how to play guide" aria-controls="playGuide" aria-expanded="false">?</button>
+      <button id="closeDrawer" class="btn btn-sm btn-close-synth deck__close" type="button" aria-label="Close controls">&times;</button>
+    </div>
+  </header>
+
+  <div class="deck__grid">
+
+    <section class="deck-section deck-section--performance" aria-labelledby="section-performance">
+      <h2 class="deck-section__title" id="section-performance">Performance</h2>
+      <div class="deck-section__body">
+        <div class="transport-cluster">
+          <button id="play" class="btn btn-primary btn-synth" type="button" aria-label="Play" aria-pressed="false">Play</button>
+          <button id="stop" class="btn btn-outline-light btn-synth btn-stop-outline" type="button" aria-label="Stop">Stop</button>
+        </div>
+        <div class="param-row">
+          <label class="param-row__label form-label" for="bpm">Tempo</label>
+          <input class="form-range param-row__control" type="range" id="bpm" min="40" max="180" value="90" />
+        </div>
+        <div class="param-row">
+          <label class="param-row__label form-label" for="volume">Volume</label>
+          <input class="form-range param-row__control" type="range" id="volume" min="0" max="100" value="60" />
+        </div>
+        <div class="param-row">
+          <label class="param-row__label form-label" for="filter">Filter</label>
+          <input class="form-range param-row__control" type="range" id="filter" min="100" max="8000" step="10" value="1750" />
+        </div>
+      </div>
+    </section>
+
+    <section class="deck-section deck-section--motion" aria-labelledby="section-motion">
+      <h2 class="deck-section__title" id="section-motion">Flower Motion</h2>
+      <div class="deck-section__body mod-section">
+        <div class="param-row mod-row">
+          <label class="param-row__label form-label" for="lfoRate">Motion Speed</label>
+          <div class="param-row__inline">
+            <input class="form-range param-row__control param-row__control--compact" type="range" id="lfoRate" min="0.01" max="10" step="0.01" value="0.18" />
+            <span class="param-row__value" id="lfoRateValue">0.18</span><span class="param-row__unit">Hz</span>
+          </div>
+        </div>
+        <div class="param-row mod-row">
+          <label class="param-row__label form-label" for="lfoAmt">Motion Depth</label>
+          <div class="param-row__inline">
+            <input class="form-range param-row__control param-row__control--compact" type="range" id="lfoAmt" min="0" max="1200" step="1" value="180" />
+            <span class="param-row__value" id="lfoAmtValue">180</span>
+          </div>
+        </div>
+        <div class="param-row mod-row">
+          <label class="param-row__label form-label" for="lfoDest">Modulates</label>
+          <select class="form-select form-select-sm param-row__select" id="lfoDest">
+            <option value="filter">Filter</option>
+            <option value="pitch">Pitch</option>
+            <option value="volume">Volume</option>
+            <option value="pan">Pan</option>
+            <option value="flowers" selected>Flower Animation</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <section class="deck-section" aria-labelledby="section-sound">
+      <h2 class="deck-section__title" id="section-sound">Sound Setup</h2>
+      <div class="deck-section__body">
+        <div class="param-row">
+          <span class="param-row__label form-label">Sound</span>
+          <span class="param-row__static status-chip">Juno Flowers</span>
+          <input type="hidden" id="preset" value="junoflowers" />
+        </div>
+        <div class="param-row">
+          <span class="param-row__label form-label">Visual</span>
+          <span class="param-row__static status-chip">Juno Flow</span>
+          <input type="hidden" id="performanceMode" value="juno-flow" />
+        </div>
+        <div class="param-row">
+          <label class="param-row__label form-label" for="waveformSelect">Oscillator</label>
+          <select class="form-select form-select-sm param-row__select" id="waveformSelect">
+            <option value="sine">Sine</option>
+            <option value="triangle">Triangle</option>
+            <option value="sawtooth" selected>Saw</option>
+            <option value="square">Square</option>
+            <option value="pulse">Pulse</option>
+            <option value="noise">Noise</option>
+          </select>
+        </div>
+        <div class="param-row">
+          <label class="param-row__label form-label" for="freq">Root Pitch</label>
+          <input class="form-range param-row__control" type="range" id="freq" min="50" max="1000" step="1" value="174" />
+        </div>
+      </div>
+    </section>
+
+    <section class="deck-section" aria-labelledby="section-fx">
+      <h2 class="deck-section__title" id="section-fx">Space</h2>
+      <div class="deck-section__body">
+        <div class="param-row">
+          <label class="param-row__label form-label" for="delay">Delay</label>
+          <input class="form-range param-row__control" type="range" id="delay" min="0" max="1" step="0.01" value="0.32" />
+        </div>
+        <div class="param-row">
+          <label class="param-row__label form-label" for="echo">Echo</label>
+          <input class="form-range param-row__control" type="range" id="echo" min="0" max="1.0" step="0.01" value="0.22" />
+        </div>
+        <p class="deck-section__note">Reverb depth follows echo send.</p>
+      </div>
+    </section>
+
+    <section class="deck-section" aria-labelledby="section-midi">
+      <button type="button" class="collapsible-header deck-section__collapse" id="toggleMidiSection"
+              aria-expanded="true" aria-controls="midiSectionBody">
+        <span class="collapsible-header__label" id="section-midi">MIDI Setup</span>
+        <span class="collapsible-header__icon" aria-hidden="true">▾</span>
+      </button>
+      <div class="midi-section__body" id="midiSectionBody">
+        <div class="midi-grid">
+          <div class="param-row midi-section__row">
+            <label class="param-row__label form-label" for="midiChannelSelect">Channel</label>
+            <select class="form-select form-select-sm param-row__select" id="midiChannelSelect" aria-label="MIDI channel filter">
+              <option value="-1">All channels</option>
+              <option value="0">1 (Akai default)</option>
+              <option value="1">2</option>
+              <option value="2">3</option>
+              <option value="3">4</option>
+              <option value="4">5</option>
+              <option value="5">6</option>
+              <option value="6">7</option>
+              <option value="7">8</option>
+              <option value="8">9</option>
+              <option value="9">10 (Drums)</option>
+              <option value="10">11</option>
+              <option value="11">12</option>
+              <option value="12">13</option>
+              <option value="13">14</option>
+              <option value="14">15</option>
+              <option value="15">16</option>
+            </select>
+          </div>
+          <div class="param-row midi-section__row">
+            <label class="param-row__label form-label" for="midiInputSelect">Input device</label>
+            <select class="form-select form-select-sm param-row__select" id="midiInputSelect" aria-label="MIDI input device">
+              <option value="all">All inputs</option>
+            </select>
+          </div>
+        </div>
+        <div class="midi-section__actions transport-cluster">
+          <button id="toggleMidiIn" class="btn btn-sm btn-outline-light btn-synth" type="button" aria-pressed="true" aria-label="Toggle MIDI input">MIDI In: On</button>
+        </div>
+        <p class="midi-section__status" id="midiStatus" role="status" aria-live="polite">MIDI: waiting for permission…</p>
+        <div class="mpk-panel" id="mpkPanel">
+          <button type="button" class="collapsible-header collapsible-header--nested" id="toggleMpkPanel"
+                  aria-expanded="false" aria-controls="mpkLegend">
+            <span class="collapsible-header__label">MPK Mini map</span>
+            <span class="collapsible-header__icon" aria-hidden="true">▸</span>
+          </button>
+          <div class="mpk-legend is-collapsed" id="mpkLegend" hidden aria-label="Akai MPK Mini pad and knob mapping">
+            <p class="mpk-legend__title">Bank A (switch to B for FX pads)</p>
+            <div class="mpk-legend__pads" id="mpkPadGrid"></div>
+            <div class="mpk-legend__knobs" id="mpkKnobGrid"></div>
+            <p class="mpk-legend__hint">Keys 1, 4, 8, 9 = scale · Keyboard Z–M + Q–I = 25 chromatic notes · MPK keys/pads</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</aside>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
+<script src="plantasia-engine.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  function $(id) { return document.getElementById(id); }
+
+  const motion = window.gsap || {
+    set: function(targets, vars) {
+      const nodes = targets && typeof targets.length === 'number' && !targets.nodeType ? targets : [targets];
+      nodes.forEach(function(node) {
+        if (!node || !node.style) return;
+        if (vars.autoAlpha != null) {
+          node.style.opacity = vars.autoAlpha;
+          node.style.visibility = vars.autoAlpha > 0 ? 'visible' : 'hidden';
+        }
+        if (vars.xPercent != null) node.style.transform = 'translateX(' + vars.xPercent + '%)';
+        if (vars.y != null) node.style.transform = 'translateY(' + vars.y + 'px)';
+      });
+    },
+    to: function(target, vars) {
+      this.set(target, vars);
+      if (typeof vars.onStart === 'function') vars.onStart();
+      if (typeof vars.onComplete === 'function') vars.onComplete();
+      return { kill: function() {} };
+    },
+    fromTo: function(target, fromVars, toVars) {
+      this.set(target, fromVars);
+      return this.to(target, toVars);
+    },
+    timeline: function(config) {
+      const api = {
+        to: function(target, vars) {
+          motion.to(target, vars);
+          return api;
+        },
+        kill: function() {}
+      };
+      if (config && typeof config.onComplete === 'function') {
+        setTimeout(config.onComplete, 0);
+      }
+      return api;
+    },
+    matchMedia: function() {
+      return {
+        add: function(_query, cb) {
+          cb({ conditions: { reduceMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches } });
+        }
+      };
+    }
+  };
+
+  const playBtn = $("play");
+  const stopBtn = $("stop");
+
+  /* --- Welcome screen (session-only entry state) --- */
+  let experienceStarted = false;
+  let playGuideOpen = false;
+  let welcomePollenAnimId = null;
+  let welcomePollenLastFrame = 0;
+  const welcomeScreen = document.getElementById('welcomeScreen');
+  const welcomeStartBtn = document.getElementById('welcomeStartBtn');
+  const welcomeStartArea = document.getElementById('welcomeStartArea');
+  const appRoot = document.getElementById('appRoot');
+  const playGuide = document.getElementById('playGuide');
+  const playGuideOpenBtn = document.getElementById('openPlayGuide');
+  const playGuideClose = document.getElementById('playGuideClose');
+  const playGuideBackdrop = document.getElementById('playGuideBackdrop');
+
+  function startWelcomePollen() {
+    const cv = document.getElementById('welcomePollen');
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    const particles = [];
+
+    function resizeWelcomePollen() {
+      cv.width = window.innerWidth;
+      cv.height = window.innerHeight;
+    }
+    resizeWelcomePollen();
+    window.addEventListener('resize', resizeWelcomePollen);
+
+    for (let i = 0; i < 18; i++) {
+      particles.push({
+        x: Math.random() * cv.width,
+        y: Math.random() * cv.height,
+        vx: (Math.random() - 0.5) * 0.28,
+        vy: -0.15 - Math.random() * 0.38,
+        r: 0.8 + Math.random() * 1.8,
+        a: 0.15 + Math.random() * 0.45
+      });
+    }
+
+    function welcomePollenFrame() {
+      if (!document.body.classList.contains('welcome-active')) return;
+      const now = performance.now();
+      if (welcomePollenLastFrame && now - welcomePollenLastFrame < 33) {
+        welcomePollenAnimId = requestAnimationFrame(welcomePollenFrame);
+        return;
+      }
+      welcomePollenLastFrame = now;
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      particles.forEach(function(p) {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.y < -6) {
+          p.y = cv.height + 6;
+          p.x = Math.random() * cv.width;
+        }
+        if (p.x < 0) p.x = cv.width;
+        if (p.x > cv.width) p.x = 0;
+        ctx.fillStyle = 'rgba(57, 255, 20, ' + p.a + ')';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      welcomePollenAnimId = requestAnimationFrame(welcomePollenFrame);
+    }
+    welcomePollenFrame();
+  }
+
+  function showPlayGuide() {
+    if (!playGuide) return;
+    playGuideOpen = true;
+    playGuide.hidden = false;
+    playGuide.setAttribute('aria-hidden', 'false');
+    if (playGuideOpenBtn) playGuideOpenBtn.setAttribute('aria-expanded', 'true');
+    const dur = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.35;
+    motion.fromTo(playGuide, { autoAlpha: 0 }, { autoAlpha: 1, duration: dur, ease: 'power2.out' });
+    playGuideClose.focus();
+  }
+
+  function dismissPlayGuide() {
+    if (!playGuideOpen || !playGuide) return;
+    playGuideOpen = false;
+    const dur = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.28;
+    motion.to(playGuide, {
+      autoAlpha: 0,
+      duration: dur,
+      ease: 'power2.in',
+      onComplete: function() {
+        playGuide.hidden = true;
+        playGuide.setAttribute('aria-hidden', 'true');
+        if (playGuideOpenBtn) playGuideOpenBtn.setAttribute('aria-expanded', 'false');
+        if (playGuideOpenBtn) playGuideOpenBtn.focus();
+        else if (openDrawerBtn) openDrawerBtn.focus();
+      }
+    });
+  }
+
+  if (playGuideOpenBtn) playGuideOpenBtn.addEventListener('click', showPlayGuide);
+  if (playGuideClose) playGuideClose.addEventListener('click', dismissPlayGuide);
+  if (playGuideBackdrop) playGuideBackdrop.addEventListener('click', dismissPlayGuide);
+
+  function selectPreset(value) {
+    const presetEl = $("preset");
+    if (!presetEl) return;
+    presetEl.value = value;
+    presetEl.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  function startExperience() {
+    if (experienceStarted) return;
+    experienceStarted = true;
+    initAudio();
+    ensureAudioReady();
+
+    const fadeDur = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 0.55;
+
+    motion.to(welcomeScreen, {
+      autoAlpha: 0,
+      duration: fadeDur,
+      ease: 'power2.inOut',
+      onComplete: function() {
+        welcomeScreen.hidden = true;
+        welcomeScreen.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('welcome-active');
+        appRoot.removeAttribute('aria-hidden');
+        if (welcomePollenAnimId) cancelAnimationFrame(welcomePollenAnimId);
+        selectPreset('junoflowers');
+        setMode('juno-flow', { force: true });
+        animate();
+        if (openDrawerBtn) openDrawerBtn.focus();
+      }
+    });
+  }
+
+  welcomeStartBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    startExperience();
+  });
+  welcomeStartArea.addEventListener('click', function() { startExperience(); });
+  welcomeStartArea.addEventListener('keydown', function(e) {
+    if (e.code === 'Enter' || e.code === 'Space') {
+      e.preventDefault();
+      startExperience();
+    }
+  });
+  startWelcomePollen();
+  if (welcomeScreen) welcomeScreen.focus();
+  if (playGuide) motion.set(playGuide, { autoAlpha: 0 });
+
+  /* --- Collapsible panels --- */
+  function setupCollapsible(toggleEl, bodyEl, defaultOpen) {
+    let open = defaultOpen;
+    function setOpen(isOpen) {
+      open = isOpen;
+      toggleEl.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      bodyEl.hidden = !isOpen;
+      bodyEl.classList.toggle('is-collapsed', !isOpen);
+      const icon = toggleEl.querySelector('.collapsible-header__icon');
+      if (icon) icon.textContent = isOpen ? '▾' : '▸';
+    }
+    toggleEl.addEventListener('click', function() { setOpen(!open); });
+    setOpen(defaultOpen);
+    return setOpen;
+  }
+
+  const dataPanel = $("dataPanel");
+  const openDataBtn = $("openDataPanel");
+  const closeDataBtn = $("closeDataPanel");
+  let dataPanelOpen = false;
+
+  /* --- GSAP panel motion (drawer slide + staggered sections, diagnostics fade) --- */
+  const drawer = document.getElementById('drawer');
+  const openDrawerBtn = document.getElementById('openDrawer');
+  const closeDrawerBtn = document.getElementById('closeDrawer');
+  const drawerSections = drawer.querySelectorAll('.deck-section');
+  let drawerOpen = false;
+  let drawerTl = null;
+  let dataPanelTl = null;
+  const motionCfg = { drawerDur: 0.45, sectionStagger: 0.045, dataDur: 0.32 };
+
+  motion.matchMedia().add(
+    { reduceMotion: '(prefers-reduced-motion: reduce)' },
+    (context) => {
+      if (context.conditions.reduceMotion) {
+        motionCfg.drawerDur = 0;
+        motionCfg.sectionStagger = 0;
+        motionCfg.dataDur = 0;
+      } else {
+        motionCfg.drawerDur = 0.45;
+        motionCfg.sectionStagger = 0.045;
+        motionCfg.dataDur = 0.32;
+      }
+    }
+  );
+
+  motion.set(drawer, { xPercent: 100 });
+  motion.set(drawerSections, { autoAlpha: 0, y: 14 });
+  motion.set(dataPanel, { autoAlpha: 0, y: -10 });
+
+  function syncDrawerBodyClass(isOpen) {
+    document.body.classList.toggle('drawer-open', isOpen);
+  }
+
+  function syncDataPanelChrome(isOpen) {
+    if (openDataBtn) {
+      openDataBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      openDataBtn.classList.toggle('is-active', isOpen);
+    }
+  }
+
+  function setDataPanelOpen(isOpen) {
+    dataPanelOpen = isOpen;
+    syncDataPanelChrome(isOpen);
+    dataPanelTl?.kill();
+
+    if (isOpen) {
+      dataPanel.classList.remove('is-collapsed');
+      dataPanel.hidden = false;
+      dataPanelTl = motion.to(dataPanel, {
+        autoAlpha: 1,
+        y: 0,
+        duration: motionCfg.dataDur,
+        ease: 'power2.out',
+        overwrite: 'auto',
+        onStart: function() { dataPanel.style.pointerEvents = 'auto'; }
+      });
+      return;
+    }
+
+    dataPanelTl = motion.to(dataPanel, {
+      autoAlpha: 0,
+      y: -10,
+      duration: motionCfg.dataDur * 0.85,
+      ease: 'power2.in',
+      overwrite: 'auto',
+      onComplete: function() {
+        dataPanel.classList.add('is-collapsed');
+        dataPanel.hidden = true;
+        dataPanel.style.pointerEvents = 'none';
+      }
+    });
+  }
+
+  if (openDataBtn) {
+    openDataBtn.addEventListener('click', function() { setDataPanelOpen(!dataPanelOpen); });
+  }
+  closeDataBtn.addEventListener('click', function() { setDataPanelOpen(false); });
+  dataPanel.classList.add('is-collapsed');
+  dataPanel.hidden = true;
+  dataPanel.style.pointerEvents = 'none';
+  syncDataPanelChrome(false);
+
+  const setMidiSectionOpen = setupCollapsible(
+    $("toggleMidiSection"), $("midiSectionBody"), true
+  );
+  const setMpkPanelOpen = setupCollapsible(
+    $("toggleMpkPanel"), $("mpkLegend"), false
+  );
+
+  function setDrawerOpen(isOpen) {
+    drawerOpen = isOpen;
+    drawerTl?.kill();
+    openDrawerBtn.style.display = isOpen ? 'none' : '';
+    openDrawerBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    openDrawerBtn.classList.toggle('is-active', isOpen);
+    syncDrawerBodyClass(isOpen);
+
+    if (isOpen) {
+      drawer.classList.remove('closed');
+      drawer.classList.add('open');
+      drawer.style.pointerEvents = 'auto';
+      drawerTl = motion.timeline({ defaults: { ease: 'power3.out', overwrite: 'auto' } });
+      drawerTl
+        .to(drawer, { xPercent: 0, duration: motionCfg.drawerDur })
+        .to(
+          drawerSections,
+          { autoAlpha: 1, y: 0, duration: motionCfg.drawerDur * 0.55, stagger: motionCfg.sectionStagger },
+          motionCfg.drawerDur ? '-=0.18' : 0
+        );
+      return;
+    }
+
+    drawerTl = motion.timeline({
+      defaults: { ease: 'power3.in', overwrite: 'auto' },
+      onComplete: function() {
+        drawer.classList.remove('open');
+        drawer.classList.add('closed');
+        drawer.style.pointerEvents = 'none';
+      }
+    });
+    drawerTl
+      .to(
+        drawerSections,
+        {
+          autoAlpha: 0,
+          y: 10,
+          duration: motionCfg.drawerDur * 0.45,
+          stagger: motionCfg.sectionStagger
+            ? { each: motionCfg.sectionStagger * 0.6, from: 'end' }
+            : 0
+        }
+      )
+      .to(drawer, { xPercent: 100, duration: motionCfg.drawerDur * 0.7 }, motionCfg.drawerDur ? '-=0.08' : 0);
+  }
+
+  function openDrawer() { setDrawerOpen(true); }
+  function closeDrawer() { setDrawerOpen(false); }
+  openDrawerBtn.addEventListener('click', function() { warmAudioEngine(); openDrawer(); });
+  closeDrawerBtn.addEventListener('click', closeDrawer);
+
+  function setPlayingState(isPlaying) {
+    playBtn.setAttribute('aria-pressed', isPlaying ? 'true' : 'false');
+    playBtn.classList.toggle('is-active', isPlaying);
+    playBtn.textContent = isPlaying ? 'Playing' : 'Play';
+  }
+
+  let activeTouchVoices = new Map();
+
+  const NEON_GREEN = '#39ff14';
+  const SYNTH_SMOOTH = 0.028;
+  const VISUAL_TICK_MS = 48;
+  let visualTickLast = 0;
+  let junoLastActiveFlower = null;
+  const MAX_ECHO_FB = 0.72;
+  const MAX_MASTER = 0.82;
+  const synthVisual = {
+    filterOpen: 0.5,
+    volumeScale: 0.6,
+    echoGlow: 0.25,
+    tempoPulse: 0,
+    lfoVisual: 0,
+    flowerLfo: 0,
+    brightness: 0.5,
+    chorusShimmer: 0,
+    reverbHaze: 0.35,
+    windPan: 0,
+    resonanceGlow: 0.4,
+    growthLevel: 0,
+    growthStage: 0,
+    delayTrail: 0,
+    canopySpread: 0.5,
+    palette: [NEON_GREEN]
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  //  JUNO FLOWERS — Black & white ASCII garden
+  // ═══════════════════════════════════════════════════════════════════════════
+  let junoFlowersActive = false;
+  let junoFlowersAnimId = null;
+  let junoScene = null;
+  let junoLastFrameMs = 0;
+  const JUNO_ASCII_FONT = 'ui-monospace, "Cascadia Code", Menlo, Consolas, monospace';
+  const JUNO_POP_CHARS = ['*', '+', '#', '.', "'", '`'];
+  const JUNO_FALL_CHARS = ['*', '.', "'", '`', ','];
+  const JUNO_MIN_GLYPH = 8;
+  const JUNO_BURST_FRAMES = 24;
+  const JUNO_VISIBLE_FLOWER_COUNT = 15;
+  const JUNO_ASCII_IDLE = [' .-. ', '( + )', ' `|` '];
+  const JUNO_ASCII_ACTIVE = [' \\|/ ', '- * -', ' /|\\ '];
+  const JUNO_ASCII_BURST = [' \\*/ ', '-***-', ' /*\\ '];
+  const JUNO_PALETTE = {
+    center: [248, 255, 210],
+    gold: [228, 198, 88],
+    inner: [196, 218, 102],
+    outer: [68, 196, 178],
+    stem: [56, 172, 164],
+    leaf: [50, 166, 156],
+    neon: [57, 255, 20],
+    gray: [150, 165, 158]
+  };
+  let junoCanvasCtx = null;
+  const junoFontCache = {};
+  const MPK_MINI_KEY_START = 48;
+  const MPK_MINI_KEY_COUNT = 25;
+  const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  // 25-key chromatic map C3–C5 (matches MPK Mini). Piano-style: bottom row + top row.
+  const KEY_TO_MIDI = {
+    KeyZ: 48, KeyS: 49, KeyX: 50, KeyD: 51, KeyC: 52, KeyV: 53, KeyG: 54,
+    KeyB: 55, KeyH: 56, KeyN: 57, KeyJ: 58, KeyM: 59,
+    KeyQ: 60, Digit2: 61, KeyW: 62, Digit3: 63, KeyE: 64, KeyR: 65, Digit5: 66,
+    KeyT: 67, Digit6: 68, KeyY: 69, Digit7: 70, KeyU: 71, KeyI: 72
+  };
+
+  function _junoMidiToFreq(midi) {
+    return 440 * Math.pow(2, (midi - 69) / 12);
+  }
+
+  function _junoMidiToLabel(midi) {
+    return NOTE_NAMES[midi % 12] + (Math.floor(midi / 12) - 1);
+  }
+
+  function _junoGlyph(jc, ch, x, y, size, alpha, colorKey) {
+    if (!ch || alpha <= 0) return;
+    if (colorKey === true) colorKey = 'neon';
+    if (colorKey === false || colorKey == null) colorKey = 'gray';
+    const glyphSize = Math.max(JUNO_MIN_GLYPH, size);
+    const pal = JUNO_PALETTE[colorKey] || JUNO_PALETTE.gray;
+    if (!junoFontCache[glyphSize]) {
+      junoFontCache[glyphSize] = `bold ${glyphSize}px ${JUNO_ASCII_FONT}`;
+    }
+    jc.font = junoFontCache[glyphSize];
+    jc.fillStyle = `rgba(${pal[0]},${pal[1]},${pal[2]},${Math.min(1, alpha)})`;
+    jc.textAlign = 'center';
+    jc.textBaseline = 'middle';
+    if (colorKey === 'neon') {
+      jc.save();
+      jc.shadowBlur = glyphSize * 0.5;
+      jc.shadowColor = `rgba(${pal[0]},${pal[1]},${pal[2]},0.65)`;
+      jc.fillText(ch, x, y);
+      jc.restore();
+    } else {
+      jc.fillText(ch, x, y);
+    }
+  }
+
+  function _junoTextBlock(jc, lines, x, y, size, alpha, colorKey) {
+    if (!lines || !lines.length || alpha <= 0) return;
+    const lineH = size * 0.92;
+    const startY = y - ((lines.length - 1) * lineH) / 2;
+    for (let i = 0; i < lines.length; i++) {
+      _junoGlyph(jc, lines[i], x, startY + i * lineH, size, alpha, colorKey);
+    }
+  }
+
+  function _junoKeyboardKeys() {
+    const keys = [];
+    for (let midi = MPK_MINI_KEY_START; midi < MPK_MINI_KEY_START + MPK_MINI_KEY_COUNT; midi++) {
+      let keyCode = null;
+      Object.keys(KEY_TO_MIDI).forEach(function(code) {
+        if (KEY_TO_MIDI[code] === midi) keyCode = code;
+      });
+      keys.push({
+        midiNote: midi,
+        freq: _junoMidiToFreq(midi),
+        keyCode: keyCode,
+        label: _junoMidiToLabel(midi),
+        keyIndex: midi - MPK_MINI_KEY_START
+      });
+    }
+    return keys;
+  }
+
+  function _junoFindFlower(keyCode, freq, midiNote) {
+    if (!junoScene) return null;
+    if (junoScene.keyMap) {
+      const match = junoScene.keyMap.find(function(k) {
+        if (typeof midiNote === 'number' && k.midiNote === midiNote) return true;
+        if (keyCode && k.keyCode === keyCode) return true;
+        return typeof freq === 'number' && Math.abs(k.noteFreq - freq) < 0.6;
+      });
+      if (match && match.flower) return match.flower;
+    }
+    if (!junoScene.flowers) return null;
+    if (typeof midiNote === 'number') {
+      const byMidi = junoScene.flowers.find(function(fl) { return fl.midiNote === midiNote; });
+      if (byMidi) return byMidi;
+    }
+    if (keyCode) {
+      const byCode = junoScene.flowers.find(function(fl) { return fl.keyCode === keyCode; });
+      if (byCode) return byCode;
+    }
+    if (typeof freq === 'number') {
+      return junoScene.flowers.find(function(fl) {
+        return Math.abs(fl.noteFreq - freq) < 0.6;
+      });
+    }
+    return null;
+  }
+
+  function _junoFlowerHeadY(fl) {
+    if (typeof fl.headY === 'number') return fl.headY;
+    return fl.y - fl.stemH;
+  }
+
+  function _junoSpawnFlowerPop(fl, intensity) {
+    const headX = fl.x;
+    const headY = _junoFlowerHeadY(fl);
+    const particles = [];
+    const inten = intensity || 0.85;
+    const count = Math.floor(10 + inten * 14);
+    for (let i = 0; i < count; i++) {
+      const ang = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.55;
+      const speed = 3.5 + Math.random() * 6.5 + inten * 4.2;
+      particles.push({
+        x: headX + (Math.random() - 0.5) * 10,
+        y: headY + (Math.random() - 0.5) * 10,
+        vx: Math.cos(ang) * speed,
+        vy: Math.sin(ang) * speed - 2.2 - Math.random() * 3.2,
+        life: 1,
+        ch: JUNO_POP_CHARS[Math.floor(Math.random() * JUNO_POP_CHARS.length)],
+        size: Math.max(JUNO_MIN_GLYPH, 11 + Math.random() * 9 + inten * 6),
+        neon: Math.random() > 0.35
+      });
+    }
+    fl.popParticles = (fl.popParticles || []).concat(particles).slice(-28);
+    fl.flashTimer = 5;
+  }
+
+  function _junoMakeFallingChar(W, H) {
+    return {
+      x: Math.random() * W,
+      y: -20,
+      vx: (Math.random() - 0.5) * 1.6,
+      vy: 0.5 + Math.random() * 1.1,
+      ch: JUNO_FALL_CHARS[Math.floor(Math.random() * JUNO_FALL_CHARS.length)],
+      size: Math.max(JUNO_MIN_GLYPH, 8 + Math.random() * 5),
+      alpha: 0.28 + Math.random() * 0.42
+    };
+  }
+
+  function _junoDrawReactiveDotFlower(jc, fl, t, options) {
+    options = options || {};
+    const scale = fl.scale || 1;
+    const activeCount = activeVoices ? activeVoices.size : 0;
+    const active = fl.held || fl.brightTimer > 0 || fl.flashTimer > 0 || fl.burstTimer > 0;
+    const burst = Math.max(0, fl.burstTimer / JUNO_BURST_FRAMES);
+    const pulse = (active ? 0.5 : 0) + burst * 0.55 + Math.min(0.35, activeCount * 0.035);
+    const sway = Math.sin(t * 0.012 * fl.swaySpeed + fl.phase) * fl.swayAmt * scale
+      + (synthVisual.flowerLfo || 0) * 10 * scale;
+    const headX = fl.baseX + sway + (synthVisual.windPan || 0) * 5 * scale;
+    const headY = fl.baseY + Math.sin(t * 0.009 + fl.phase) * 2 * scale;
+    const stemBottom = fl.baseY + fl.stemH;
+    const fontSize = Math.max(11, 16 * scale * (1 + pulse * 0.08));
+    const stemStep = Math.max(15, 18 * scale);
+    const bright = active || options.bright;
+
+    if (options.lite && !active && !options.bright) return;
+
+    fl.x = headX;
+    fl.y = stemBottom;
+    fl.headY = headY;
+
+    if (fl.held) {
+      fl.brightTimer = Math.max(fl.brightTimer, 10);
+      fl.bloomState = Math.min(1, fl.bloomState + 0.02);
+    } else {
+      fl.bloomState = Math.min(1, fl.bloomState + fl.bloomSpeed);
+    }
+    if (fl.burstTimer > 0) fl.burstTimer--;
+    if (fl.brightTimer > 0) fl.brightTimer -= 1.5;
+    if (fl.flashTimer > 0) fl.flashTimer--;
+    if (fl.stemBend > 0.05) fl.stemBend *= 0.82;
+    else fl.stemBend = 0;
+
+    jc.save();
+    jc.globalCompositeOperation = 'lighter';
+
+    for (let y = headY + 24 * scale; y <= stemBottom; y += stemStep) {
+      const frac = (y - headY) / Math.max(1, stemBottom - headY);
+      const bend = Math.sin(frac * Math.PI + t * 0.014 + fl.phase) * 3 * scale
+        + fl.stemBend * frac * scale;
+      _junoGlyph(jc, '|', fl.baseX + bend, y, fontSize * 0.82, 0.45 + pulse * 0.2, bright ? 'neon' : 'stem');
+    }
+
+    if (bright || !options.lite) {
+      const leafY = headY + fl.stemH * 0.58;
+      _junoGlyph(jc, '/', fl.baseX - 13 * scale, leafY, fontSize * 0.76, bright ? 0.82 : 0.48, bright ? 'neon' : 'leaf');
+      _junoGlyph(jc, '\\', fl.baseX + 13 * scale, leafY + 10 * scale, fontSize * 0.76, bright ? 0.82 : 0.48, bright ? 'neon' : 'leaf');
+    }
+
+    const headLines = burst > 0.2 ? JUNO_ASCII_BURST : (bright ? JUNO_ASCII_ACTIVE : JUNO_ASCII_IDLE);
+    _junoTextBlock(jc, headLines, headX, headY, fontSize, bright ? 0.98 : 0.68, bright ? 'neon' : 'gray');
+    _junoGlyph(jc, fl.keyLabel || '', headX, headY + 34 * scale, Math.max(8, fontSize * 0.55), bright ? 0.78 : 0.34, bright ? 'neon' : 'gray');
+
+    fl.popParticles = fl.popParticles.filter(p => p.life > 0);
+    fl.popParticles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.08;
+      p.vx *= 0.965;
+      p.life -= 0.045;
+      _junoGlyph(jc, p.ch, p.x, p.y, Math.max(JUNO_MIN_GLYPH, p.size * scale * (0.38 + p.life * 0.35)), p.life, p.neon ? 'neon' : 'gold');
+    });
+
+    jc.restore();
+  }
+
+  function _junoInitScene() {
+    const W = canvas.width, H = canvas.height;
+    const keys = _junoKeyboardKeys();
+
+    const skyDots = [];
+    for (let i = 0; i < Math.floor(W / 90); i++) {
+      skyDots.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        ch: ['.', "'", '`'][Math.floor(Math.random() * 3)],
+        size: JUNO_MIN_GLYPH + Math.random() * 4,
+        alpha: 0.02 + Math.random() * 0.05,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+
+    const visibleCount = Math.min(JUNO_VISIBLE_FLOWER_COUNT, keys.length);
+    const cols = 5;
+    const rows = Math.ceil(visibleCount / cols);
+    const stageW = Math.min(W * 0.9, 980);
+    const stageH = Math.min(H * 0.7, 720);
+    const startX = (W - stageW) / 2;
+    const startY = H * 0.13;
+    const cellW = stageW / cols;
+    const cellH = stageH / rows;
+    const flowerScale = Math.max(0.6, Math.min(1.25, Math.min(cellW / 170, cellH / 170)));
+
+    const flowers = [];
+    for (let i = 0; i < visibleCount; i++) {
+      const k = keys[i];
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const stagger = (row % 2) * cellW * 0.08;
+      const baseX = startX + cellW * (col + 0.5) + stagger;
+      const baseY = startY + cellH * (row + 0.32);
+      const stemH = cellH * 0.42;
+      flowers.push({
+        keyCode: k.keyCode,
+        midiNote: k.midiNote,
+        noteFreq: k.freq,
+        keyLabel: k.label,
+        keyIndex: i,
+        baseX,
+        baseY,
+        x: baseX,
+        y: baseY + stemH,
+        headY: baseY,
+        stemH,
+        scale: flowerScale,
+        dot: Math.max(2, 3.6 * flowerScale),
+        step: Math.max(6, 8 * flowerScale),
+        phase: (i / visibleCount) * Math.PI * 2,
+        bloomState: 0.72 + (i % 3) * 0.04,
+        bloomSpeed: 0.0012,
+        swayAmt: 2 + (i % 4) * 0.55,
+        swaySpeed: 0.7 + (i % 5) * 0.08,
+        burstTimer: 0,
+        burstPeak: 1.6,
+        burstScale: 1,
+        popParticles: [],
+        stemBend: 0,
+        brightTimer: 0,
+        petalPulse: 1,
+        rings: [],
+        held: false,
+        heldCount: 0,
+        flashTimer: 0
+      });
+    }
+
+    const keyMap = keys.map(function(k, i) {
+      return {
+        keyCode: k.keyCode,
+        midiNote: k.midiNote,
+        noteFreq: k.freq,
+        flower: flowers[i % flowers.length]
+      };
+    });
+
+    const pollen = [];
+    for (let i = 0; i < 16; i++) {
+      pollen.push({
+        x: W * (0.36 + Math.random() * 0.28),
+        y: H * (0.24 + Math.random() * 0.55),
+        vx: (Math.random() - 0.5) * 0.18,
+        vy: -0.035 - Math.random() * 0.08,
+        life: Math.random(),
+        ch: ['.', "'", '`'][Math.floor(Math.random() * 3)],
+        size: JUNO_MIN_GLYPH + Math.random() * 4
+      });
+    }
+
+    const falling = [];
+    for (let i = 0; i < 2; i++) {
+      const p = _junoMakeFallingChar(W, H);
+      p.y = Math.random() * H * 0.5;
+      p.alpha = 0.04 + Math.random() * 0.08;
+      falling.push(p);
+    }
+
+    junoScene = { t: 0, W, H, skyDots, flowers, keyMap, pollen, falling };
+  }
+
+  function triggerJunoNoteEvent(freq, velocity, keyCode, midiNote) {
+    if (!isJunoFlowMode()) return;
+    if (!junoScene || junoScene.W !== canvas.width || junoScene.H !== canvas.height) {
+      _junoInitScene();
+    }
+    const flower = _junoFindFlower(keyCode, freq, midiNote);
+    if (!flower) return;
+    junoLastActiveFlower = flower;
+
+    const intensity = typeof velocity === 'number' ? Math.max(0.4, velocity / 127) : 0.9;
+    const growthBoost = (synthVisual.growthLevel || 0) * 0.35;
+    flower.heldCount = (flower.heldCount || 0) + 1;
+    flower.held = true;
+
+    flower.burstTimer = Math.min(JUNO_BURST_FRAMES, Math.max(flower.burstTimer, 20));
+    flower.burstPeak = Math.min(2.1, 1.35 + intensity * 0.55);
+    flower.burstScale = flower.burstPeak;
+    flower.stemBend = Math.min(16, flower.stemBend + intensity * 10);
+    flower.brightTimer = 18;
+    flower.petalPulse = 1 + intensity * 0.45;
+    flower.bloomState = Math.min(1, flower.bloomState + 0.1);
+    flower.flashTimer = 6;
+    flower.rings = [];
+
+    _junoSpawnFlowerPop(flower, intensity);
+  }
+
+  function triggerJunoNoteRelease(keyCode, midiNote) {
+    if (!isJunoFlowMode() || !junoScene) return;
+    const flower = _junoFindFlower(keyCode, null, midiNote);
+    if (!flower) return;
+    flower.heldCount = Math.max(0, (flower.heldCount || 1) - 1);
+    flower.held = flower.heldCount > 0;
+  }
+
+  function drawJunoFrame(options) {
+    options = options || {};
+    if (!isJunoFlowMode()) {
+      cancelAnimationFrame(junoFlowersAnimId);
+      junoFlowersAnimId = null;
+      junoFlowersActive = false;
+      animate();
+      return;
+    }
+
+    if (!junoScene || junoScene.W !== canvas.width || junoScene.H !== canvas.height) {
+      _junoInitScene();
+    }
+
+    const sc = junoScene;
+    const W = sc.W, H = sc.H;
+    const nowMs = performance.now();
+    const activeFrame = activeVoices && activeVoices.size > 0;
+    const frameBudgetMs = activeFrame ? 16 : 50;
+    if (!options.flush && junoLastFrameMs && nowMs - junoLastFrameMs < frameBudgetMs) {
+      junoFlowersAnimId = requestAnimationFrame(drawJunoFrame);
+      return;
+    }
+    if (!options.flush) junoLastFrameMs = nowMs;
+    sc.t++;
+    const t = sc.t;
+    if (options.flush && options.lite) updateVisualSynthStateLite();
+    else if (!options.flush) updateVisualSynthState();
+    const jc = junoCanvasCtx || canvas.getContext('2d');
+    junoCanvasCtx = jc;
+    const tempoPulse = Math.sin(synthVisual.tempoPulse * Math.PI * 2) * 0.12;
+    const filterBright = 0.35 + synthVisual.filterOpen * 0.65;
+    const echoGlow = synthVisual.echoGlow;
+    const lite = options.lite;
+
+    junoFlowersActive = true;
+
+    jc.fillStyle = '#000000';
+    jc.fillRect(0, 0, W, H);
+
+    const hazeAmt = (synthVisual.reverbHaze || 0) * 0.35 + (synthVisual.growthLevel || 0) * 0.15;
+    if (hazeAmt > 0.08 && !lite) {
+      jc.save();
+      jc.globalAlpha = 0.03 + hazeAmt * 0.07;
+      jc.fillStyle = '#ff9a5c';
+      jc.fillRect(0, 0, W, H);
+      jc.restore();
+    }
+
+    if (!lite) {
+      sc.skyDots.forEach(d => {
+        const flicker = 0.35 + filterBright * 0.2 + tempoPulse
+          + 0.15 * Math.sin(t * 0.018 + d.phase);
+        _junoGlyph(jc, d.ch, d.x, d.y, d.size, d.alpha * flicker, 'outer');
+      });
+
+      sc.falling.forEach((p, i) => {
+        p.x += p.vx + Math.sin(t * 0.017 + i * 1.4) * 0.28;
+        p.y += p.vy;
+        if (p.y > H + 22) sc.falling[i] = _junoMakeFallingChar(W, H);
+        _junoGlyph(jc, p.ch, p.x, p.y, p.size, p.alpha, 'leaf');
+      });
+    }
+
+    sc.flowers.forEach(function(fl) {
+      _junoDrawReactiveDotFlower(jc, fl, t, {
+        bright: fl === junoLastActiveFlower,
+        lite
+      });
+    });
+
+    if (!lite) {
+      sc.pollen.forEach((p, i) => {
+        p.x += p.vx + Math.sin(t * 0.018 + i * 0.72) * 0.19;
+        p.y += p.vy;
+        p.life -= 0.0017;
+        if (p.life <= 0 || p.y < -8) {
+          sc.pollen[i] = {
+            x: W * (0.36 + Math.random() * 0.28),
+            y: H * (0.88 + Math.random() * 0.04),
+            vx: (Math.random() - 0.5) * 0.16,
+            vy: -0.04 - Math.random() * 0.1,
+            life: 1,
+            ch: ['.', "'", '`'][Math.floor(Math.random() * 3)],
+            size: JUNO_MIN_GLYPH + Math.random() * 4
+          };
+        }
+        _junoGlyph(jc, p.ch, p.x, p.y, p.size, (0.2 + echoGlow * 0.24) * p.life, p.life > 0.65 ? 'gold' : 'outer');
+      });
+    }
+
+    if (!options.flush) junoFlowersAnimId = requestAnimationFrame(drawJunoFrame);
+  }
+  // ═══════════════════════════════════════════════════════════════════════════
+  //  END JUNO FLOWERS
+  // ═══════════════════════════════════════════════════════════════════════════
+  function flushModeVisual(options) {
+    options = options || {};
+    if (options.fast && junoScene && junoLastActiveFlower && canvas) {
+      const jc = junoCanvasCtx || canvas.getContext('2d');
+      junoCanvasCtx = jc;
+      _junoDrawReactiveDotFlower(jc, junoLastActiveFlower, junoScene.t || 0, {
+        bright: true,
+        lite: true
+      });
+      return;
+    }
+    if (!junoFlowersAnimId) drawJunoFrame();
+    else drawJunoFrame({ flush: true, lite: true });
+  }
+  const presetSettings = PlantasiaEngine.buildPresetRegistry();
+
+  // Transport & canvas state — must be declared before readUISynthState (assigns bpm)
+  let bpm = 90, bpmTimer = null, stopped = true;
+  let currentWaveColor = NEON_GREEN;
+  let canvas = document.getElementById("waveCanvas");
+  let ctx = canvas ? canvas.getContext("2d") : null;
+
+  // --- Single source of truth for synth parameters ---
+  const synthState = {
+    mode: 'juno-flow',
+    bpm: 90,
+    volume: 60,
+    baseFreq: 174,
+    preset: 'junoflowers',
+    waveform: 'sawtooth',
+    filterHz: 1750,
+    filterType: 'lowpass',
+    filterQ: 2.4,
+    lfoRate: 0.18,
+    lfoAmount: 180,
+    lfoDest: 'flowers',
+    delayMix: 0.32,
+    echoFeedback: 0.22,
+    reverbDepth: 0.5
+  };
+
+  let userWaveform = null;
+  const waveformSelect = document.getElementById('waveformSelect');
+
+  function getMode() { return 'juno-flow'; }
+  function isJunoFlowMode() { return getMode() === 'juno-flow'; }
+
+  function applyModeBodyClass() {
+    document.body.classList.add('mode-juno-flow');
+  }
+
+  function stopAllVisualizers() {
+    cancelAnimationFrame(junoFlowersAnimId);
+    junoFlowersAnimId = null;
+  }
+
+  function setMode(mode, options) {
+    options = options || {};
+    mode = 'juno-flow';
+    if (synthState.mode === mode && !options.force) return;
+
+    synthState.mode = mode;
+    const modeEl = $("performanceMode");
+    if (modeEl && modeEl.value !== mode) modeEl.value = mode;
+
+    stopAllVisualizers();
+    applyModeBodyClass();
+
+    if (options.suggestPreset && isJunoFlowMode()) {
+      const p = getPreset();
+      if (p !== 'junoflowers') {
+        selectPreset('junoflowers');
+        return;
+      }
+    }
+
+    junoFlowersActive = true;
+    junoScene = null;
+    drawJunoFrame();
+  }
+
+  function triggerModeNoteVisual(freq, velocity, keyCode, midiNote) {
+    triggerJunoNoteEvent(freq, velocity, keyCode, midiNote);
+  }
+
+  function parseVoiceTriggerIds(voiceId) {
+    if (voiceId.startsWith('kb-')) {
+      const keyCode = voiceId.slice(3);
+      return { keyCode, midiNote: KEY_TO_MIDI[keyCode] };
+    }
+    if (voiceId.startsWith('touch-')) {
+      const keyCode = voiceId.slice(6);
+      return { keyCode, midiNote: KEY_TO_MIDI[keyCode] };
+    }
+    if (voiceId.startsWith('midi-')) {
+      const midiNote = parseInt(voiceId.slice(5), 10);
+      let keyCode = null;
+      Object.keys(KEY_TO_MIDI).forEach(function(code) {
+        if (KEY_TO_MIDI[code] === midiNote) keyCode = code;
+      });
+      return { keyCode, midiNote };
+    }
+    return { keyCode: null, midiNote: null };
+  }
+
+  function readUISynthState() {
+    synthState.bpm = parseInt($("bpm").value, 10);
+    synthState.volume = parseFloat($("volume").value);
+    synthState.baseFreq = parseFloat($("freq").value);
+    synthState.preset = 'junoflowers';
+    synthState.waveform = userWaveform || waveformSelect.value;
+    synthState.filterHz = parseFloat($("filter").value);
+    synthState.lfoRate = parseFloat($("lfoRate").value);
+    synthState.lfoAmount = parseFloat($("lfoAmt").value);
+    synthState.lfoDest = $("lfoDest").value;
+    synthState.delayMix = parseFloat($("delay").value);
+    synthState.echoFeedback = parseFloat($("echo").value);
+    const modeEl = $("performanceMode");
+    if (modeEl) modeEl.value = 'juno-flow';
+    synthState.mode = 'juno-flow';
+    const p = getPresetParams();
+    synthState.filterType = p.filterType || 'lowpass';
+    synthState.reverbDepth = p.reverb != null ? p.reverb : synthState.reverbDepth;
+    bpm = synthState.bpm;
+  }
+
+  function syncUIFromSynthState() {
+    $("bpm").value = synthState.bpm;
+    $("volume").value = synthState.volume;
+    $("freq").value = Math.round(synthState.baseFreq);
+    $("preset").value = 'junoflowers';
+    waveformSelect.value = synthState.waveform;
+    $("filter").value = Math.round(synthState.filterHz);
+    $("lfoRate").value = synthState.lfoRate;
+    $("lfoAmt").value = synthState.lfoAmount;
+    $("lfoDest").value = synthState.lfoDest;
+    $("delay").value = synthState.delayMix;
+    $("echo").value = synthState.echoFeedback;
+    const modeEl = $("performanceMode");
+    if (modeEl) modeEl.value = 'juno-flow';
+    updateLfoDisplay();
+    bpm = synthState.bpm;
+  }
+
+  function applyPresetToSynth(presetKey) {
+    const p = presetSettings[presetKey];
+    if (!p) return;
+    const sound = p.sound || p;
+    synthState.preset = presetKey;
+    synthState.waveform = sound.waveform || p.waveform;
+    synthState.filterHz = sound.filterFreq || p.filterFreq;
+    synthState.filterType = sound.filterType || p.filterType || 'lowpass';
+    synthState.filterQ = sound.filterQ || 4;
+    synthState.delayMix = Math.min(1, sound.delay != null ? sound.delay : p.delay);
+    synthState.echoFeedback = Math.min(MAX_ECHO_FB, sound.echo != null ? sound.echo : p.echo);
+    synthState.reverbDepth = sound.reverb != null ? sound.reverb : (p.reverb != null ? p.reverb : 0.5);
+    userWaveform = null;
+    currentWaveColor = p.color;
+    if (p.visuals && p.visuals.palette && p.visuals.palette[0]) {
+      currentWaveColor = p.visuals.palette[0];
+    }
+    syncUIFromSynthState();
+    syncAudioEngine();
+    updateVisualTargets();
+  }
+
+  function updateVisualTargets() {
+    tickLivingVoices();
+  }
+
+  function tickLivingVoices() {
+    if (!audioCtx || !botanicalGraph) return;
+    const agg = PlantasiaEngine.tickAllLivingVoices(activeVoices, audioCtx);
+    const base = PlantasiaEngine.computeVisualState(synthState, getPresetParams(), agg);
+    Object.assign(synthVisual, base);
+  }
+
+  function updateVisualSynthStateLite() {
+    const beatSec = 60 / (synthState.bpm || 90);
+    synthVisual.tempoPulse = (performance.now() / 1000 / beatSec) % 1;
+    const lfoPhase = performance.now() * 0.001 * synthState.lfoRate * Math.PI * 2;
+    synthVisual.lfoVisual = Math.sin(lfoPhase);
+    synthVisual.flowerLfo = synthState.lfoDest === 'flowers'
+      ? synthVisual.lfoVisual * (synthState.lfoAmount / 1200)
+      : 0;
+  }
+
+  function updateVisualSynthState() {
+    const now = performance.now();
+    if (now - visualTickLast >= VISUAL_TICK_MS) {
+      tickLivingVoices();
+      visualTickLast = now;
+    }
+    updateVisualSynthStateLite();
+    synthVisual.delayTrail = synthState.delayMix;
+    synthVisual.echoGlow = Math.min(MAX_ECHO_FB, synthState.echoFeedback);
+  }
+
+  function getWaveformFromPreset() { return synthState.waveform; }
+
+  function pitchFromBase(noteFreq) {
+    return noteFreq * (synthState.baseFreq / 174);
+  }
+
+  function getLfoDepth(dest, amount) {
+    if (dest === 'filter') return amount;
+    if (dest === 'pitch') return amount;
+    if (dest === 'pan') return amount / 600;
+    if (dest === 'volume') return amount / 400;
+    return 0;
+  }
+
+  function applyFlowerGardenDefaults() {
+    const jf = presetSettings.junoflowers;
+    const sound = jf.sound || jf;
+    synthState.filterHz = sound.filterFreq || 1750;
+    synthState.delayMix = sound.delay || 0.32;
+    synthState.echoFeedback = sound.echo || 0.22;
+    synthState.reverbDepth = sound.reverb || 0.62;
+    syncUIFromSynthState();
+    syncAudioEngine();
+  }
+
+  $("preset").addEventListener('change', function() {
+    applyPresetToSynth($("preset").value);
+
+    applyFlowerGardenDefaults();
+    junoScene = null;
+
+    if (!stopped) scheduleNotes(getScaleFromPreset());
+  });
+
+  const performanceModeSelect = $("performanceMode");
+  if (performanceModeSelect) {
+    performanceModeSelect.addEventListener('change', function() {
+      setMode(this.value, { suggestPreset: true, force: true });
+    });
+  }
+
+  applyModeBodyClass();
+
+  waveformSelect.addEventListener('change', function() {
+    userWaveform = this.value;
+    synthState.waveform = this.value;
+    syncAudioEngine();
+  });
+
+  // Modulation controls
+  const lfoRateSlider = $("lfoRate");
+  const lfoAmtSlider = $("lfoAmt");
+  const lfoDestSelect = $("lfoDest");
+  const lfoRateValue = $("lfoRateValue");
+  const lfoAmtValue = $("lfoAmtValue");
+  function updateLfoDisplay() {
+    if (lfoRateValue) lfoRateValue.textContent = Number(lfoRateSlider.value).toFixed(2);
+    if (lfoAmtValue) lfoAmtValue.textContent = lfoAmtSlider.value;
+  }
+
+  function bindSynthControls() {
+    const smoothInputs = ['bpm', 'volume', 'freq', 'filter', 'lfoRate', 'lfoAmt', 'delay', 'echo'];
+    smoothInputs.forEach(function(id) {
+      const el = $(id);
+      if (!el) return;
+      el.addEventListener('input', function() {
+        readUISynthState();
+        syncAudioEngine();
+        if (id === 'lfoRate' || id === 'lfoAmt') updateLfoDisplay();
+        if (id === 'bpm' && !stopped) scheduleNotes(getScaleFromPreset());
+      });
+    });
+
+    lfoDestSelect.addEventListener('change', function() {
+      readUISynthState();
+      syncAudioEngine();
+      routeGlobalLfo();
+    });
+  }
+
+  bindSynthControls();
+  syncUIFromSynthState();
+  readUISynthState();
+
+  // Audio Engine nodes
+  let audioCtx, analyser, masterGain, bufferLength, dataArray;
+  let botanicalGraph = null;
+
+  let liveBus = null;
+  let liveFilter = null;
+  let fxDry = null;
+  let fxDelay = null;
+  let fxDelayFb = null;
+  let fxDelayWet = null;
+  let globalLfo = null;
+  let globalLfoGain = null;
+  let noiseBuffer = null;
+  let pulsePeriodicWave = null;
+
+  function getPreset() { return 'junoflowers'; }
+  function getPresetParams() { return presetSettings[getPreset()]; }
+  function getScaleFromPreset() { return getPresetParams().scale; }
+  function getColorFromPreset() { return getPresetParams().color; }
+
+  function getNoiseBuffer(ctx) {
+    if (!noiseBuffer || noiseBuffer.sampleRate !== ctx.sampleRate) {
+      const len = Math.floor(ctx.sampleRate * 2);
+      noiseBuffer = ctx.createBuffer(1, len, ctx.sampleRate);
+      const data = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < len; i++) data[i] = Math.random() * 2 - 1;
+    }
+    return noiseBuffer;
+  }
+
+  function getPulseWave(ctx) {
+    if (!pulsePeriodicWave) {
+      const n = 32;
+      const real = new Float32Array(n);
+      const imag = new Float32Array(n);
+      for (let i = 1; i < n; i++) {
+        const theta = Math.PI * i * 0.12;
+        real[i] = (2 / (Math.PI * i)) * Math.sin(theta);
+        imag[i] = 0;
+      }
+      pulsePeriodicWave = ctx.createPeriodicWave(real, imag);
+    }
+    return pulsePeriodicWave;
+  }
+
+  function createVoiceSource(waveform, ctx) {
+    if (waveform === 'noise') {
+      const src = ctx.createBufferSource();
+      src.buffer = getNoiseBuffer(ctx);
+      src.loop = true;
+      return { source: src, isNoise: true };
+    }
+    const o = ctx.createOscillator();
+    if (waveform === 'pulse') {
+      o.setPeriodicWave(getPulseWave(ctx));
+    } else if (waveform === 'saw' || waveform === 'sawtooth') {
+      o.type = 'sawtooth';
+    } else {
+      o.type = waveform;
+    }
+    return { source: o, isNoise: false };
+  }
+
+  function routeGlobalLfo() {
+    if (!globalLfoGain || !liveFilter || !audioCtx) return;
+    try { globalLfoGain.disconnect(); } catch (err) { /* ignore */ }
+    const t = audioCtx.currentTime;
+    const depth = getLfoDepth(synthState.lfoDest, synthState.lfoAmount);
+    if (synthState.lfoDest === 'filter' && depth > 0) {
+      globalLfoGain.gain.setTargetAtTime(depth, t, SYNTH_SMOOTH);
+      globalLfoGain.connect(liveFilter.frequency);
+    } else {
+      globalLfoGain.gain.setTargetAtTime(0, t, SYNTH_SMOOTH);
+    }
+  }
+
+  function syncAudioEngine() {
+    if (!audioCtx || !botanicalGraph) return;
+    const t = audioCtx.currentTime;
+    const smooth = SYNTH_SMOOTH;
+    const preset = getPresetParams();
+
+    masterGain.gain.setTargetAtTime(
+      Math.min(MAX_MASTER, synthState.volume / 100), t, smooth
+    );
+
+    PlantasiaEngine.syncBotanical(botanicalGraph, synthState, preset);
+
+    globalLfo.frequency.setTargetAtTime(synthState.lfoRate, t, smooth);
+    routeGlobalLfo();
+    syncActiveVoicePitch();
+    updateVisualTargets();
+  }
+
+  function syncActiveVoicePitch() {
+    if (!audioCtx) return;
+    const t = audioCtx.currentTime;
+    activeVoices.forEach(function(voice) {
+      if (!voice.noteFreq) return;
+      const newFreq = pitchFromBase(voice.noteFreq);
+      voice.oscillators.forEach(function(o) {
+        try {
+          if (o.frequency) o.frequency.setTargetAtTime(newFreq, t, SYNTH_SMOOTH);
+        } catch (err) { /* ignore */ }
+      });
+    });
+  }
+
+  function initAudio() {
+    if (audioCtx) return;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)({ latencyHint: 'interactive' });
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 2048;
+    bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+
+    const t = audioCtx.currentTime;
+    readUISynthState();
+
+    masterGain = audioCtx.createGain();
+    masterGain.gain.setValueAtTime(Math.min(MAX_MASTER, synthState.volume / 100), t);
+
+    botanicalGraph = PlantasiaEngine.createBotanicalGraph(audioCtx);
+    liveBus = botanicalGraph.liveBus;
+    liveFilter = botanicalGraph.liveFilter;
+    fxDry = botanicalGraph.fxDry;
+    fxDelay = botanicalGraph.fxDelay;
+    fxDelayFb = botanicalGraph.fxDelayFb;
+    fxDelayWet = botanicalGraph.fxDelayWet;
+
+    globalLfo = audioCtx.createOscillator();
+    globalLfo.type = 'sine';
+    globalLfoGain = audioCtx.createGain();
+    globalLfo.connect(globalLfoGain);
+    globalLfo.start();
+
+    PlantasiaEngine.wireBotanicalOutputs(botanicalGraph, masterGain, analyser);
+
+    masterGain.connect(audioCtx.destination);
+    masterGain.connect(analyser);
+
+    syncAudioEngine();
+    junoFlowersActive = true;
+    drawJunoFrame();
+  }
+
+  // Polyphony, Drift, Saturation, Filter Resonance, LFOs
+  let polyNotes = [];
+  let cachedShaperCurve = null;
+  let audioUnlockPromise = null;
+
+  const activeVoices = new Map();
+  const MAX_VOICES = 28;
+
+  const KEY_SCALE_MAP = {
+    Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, Digit5: 4,
+    Digit6: 5, Digit7: 6, Digit8: 7, Digit9: 8
+  };
+
+  function midiNoteToFreq(note) {
+    return 440 * Math.pow(2, (note - 69) / 12);
+  }
+
+  const KEY_NOTE_MAP = {};
+  Object.keys(KEY_TO_MIDI).forEach(function(code) {
+    KEY_NOTE_MAP[code] = midiNoteToFreq(KEY_TO_MIDI[code]);
+  });
+
+  function getShaperCurve() {
+    if (!cachedShaperCurve) {
+      cachedShaperCurve = new Float32Array(65536);
+      for (let i = 0; i < 65536; ++i) {
+        const x = (i - 32768) / 32768;
+        cachedShaperCurve[i] = Math.tanh(x * 1.5) * 0.8 + x * 0.2;
+      }
+    }
+    return cachedShaperCurve;
+  }
+
+  function buildToneParams(freq, velocity) {
+    const params = { ...getPresetParams() };
+    params.freq = pitchFromBase(freq);
+    params.waveform = synthState.waveform;
+    params.delay = synthState.delayMix;
+    params.echo = synthState.echoFeedback;
+    params.filterFreq = synthState.filterHz;
+    params.filterType = synthState.filterType;
+    params.reverb = 0.3 + synthState.echoFeedback * 0.5 + synthState.reverbDepth * 0.3;
+    if (typeof velocity === "number" && velocity > 0) {
+      params.velocityScale = velocity / 127;
+    }
+    return params;
+  }
+
+  function resolveStartTime(midiEventTimeMs) {
+    const now = audioCtx.currentTime;
+    if (typeof midiEventTimeMs !== "number") return now;
+    const delta = (midiEventTimeMs - performance.now()) / 1000;
+    return Math.max(now, now + Math.max(0, Math.min(delta, 0.012)));
+  }
+
+  function ensureLiveAudioReady() {
+    if (!audioCtx) initAudio();
+    if (audioCtx && audioCtx.state !== 'running') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  /** Keyboard/MIDI path — Plantasia Signature Sound Engine voice */
+  function playLiveVoice(params, startTime, voiceId) {
+    return PlantasiaEngine.createLiveVoice({
+      audioCtx,
+      params,
+      preset: getPresetParams(),
+      startTime,
+      voiceId,
+      synthState,
+      graph: botanicalGraph,
+      createVoiceSource,
+      getLfoDepth,
+      instantAttack: true
+    });
+  }
+
+  function playInstrument(params, when, options) {
+    options = options || {};
+    const sustain = !!options.sustain;
+    const now = audioCtx.currentTime;
+    const startTime = when !== undefined ? when : now;
+
+    if (!sustain) {
+      polyNotes = polyNotes.filter(n => n.endTime > now);
+      if (polyNotes.length > 8) polyNotes.shift();
+    }
+
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0, startTime);
+    const velScale = params.velocityScale != null ? params.velocityScale : 1;
+    const peak = 0.28 * velScale;
+    gainNode.gain.linearRampToValueAtTime(peak, startTime + params.attack);
+    if (!sustain) {
+      gainNode.gain.linearRampToValueAtTime(0.0, startTime + params.attack + params.release);
+    }
+
+    const panNode = audioCtx.createStereoPanner();
+    panNode.pan.value = typeof params.pan === "function" ? params.pan() : (params.pan || 0);
+
+    const lfoRate = synthState.lfoRate;
+    const lfoAmt = synthState.lfoAmount;
+    const lfoDest = synthState.lfoDest;
+    const lfoDepth = getLfoDepth(lfoDest, lfoAmt);
+
+    let lfo = null;
+    let lfoGain = null;
+    const voiceOscillators = [];
+    const lfoStopTime = sustain ? null : startTime + params.attack + params.release + 0.1;
+
+    if (lfoDepth > 0 && lfoDest !== 'filter' && lfoDest !== 'flowers') {
+      lfo = audioCtx.createOscillator();
+      lfo.type = "sine";
+      lfo.frequency.value = lfoRate;
+      lfoGain = audioCtx.createGain();
+      lfoGain.gain.value = lfoDepth;
+      lfo.start(startTime);
+      if (lfoStopTime != null) lfo.stop(lfoStopTime);
+      if (lfoDest === 'volume') lfo.connect(lfoGain).connect(gainNode.gain);
+      if (lfoDest === 'pan') lfo.connect(lfoGain).connect(panNode.pan);
+    }
+
+    const wf = synthState.waveform;
+    params.detuneCents = params.detuneCents || [-5, 0, 5];
+    params.detuneCents.forEach(function(offset) {
+      const drift = (Math.random() - 0.5) * 6;
+      const voice = createVoiceSource(wf, audioCtx);
+      if (voice.isNoise) {
+        voice.source.connect(gainNode);
+        voice.source.start(startTime);
+        if (lfoStopTime != null) {
+          voice.source.stop(lfoStopTime);
+          polyNotes.push({ osc: voice.source, endTime: lfoStopTime });
+        }
+      } else {
+        if (lfo && lfoDest === "pitch") {
+          lfo.connect(lfoGain);
+          lfoGain.connect(voice.source.detune);
+          voice.source.detune.setValueAtTime(offset + drift, startTime);
+        } else {
+          voice.source.detune.value = offset + drift;
+        }
+        voice.source.frequency.setValueAtTime(params.freq, startTime);
+        voice.source.connect(gainNode);
+        voice.source.start(startTime);
+        voiceOscillators.push(voice.source);
+        if (lfoStopTime != null) {
+          voice.source.stop(lfoStopTime);
+          polyNotes.push({ osc: voice.source, endTime: lfoStopTime });
+        }
+      }
+    });
+
+    gainNode.connect(panNode);
+    panNode.connect(liveBus);
+
+    if (sustain && options.voiceId) {
+      return {
+        voiceId: options.voiceId,
+        gainNode,
+        oscillators: voiceOscillators,
+        lfo,
+        release: params.release
+      };
+    }
+    return null;
+  }
+
+  function ensureAudioReady() {
+    if (!audioCtx) initAudio();
+    if (audioCtx.state === 'running') return Promise.resolve();
+    if (!audioUnlockPromise) {
+      audioUnlockPromise = audioCtx.resume().finally(function() {
+        audioUnlockPromise = null;
+      });
+    }
+    return audioUnlockPromise;
+  }
+
+  function warmAudioEngine() {
+    initAudio();
+    ensureAudioReady().then(function() {
+      if (!audioCtx || audioCtx.state !== 'running') return;
+      const buffer = audioCtx.createBuffer(1, 1, audioCtx.sampleRate);
+      const src = audioCtx.createBufferSource();
+      src.buffer = buffer;
+      src.connect(audioCtx.destination);
+      src.start(audioCtx.currentTime);
+      src.stop(audioCtx.currentTime + 0.001);
+    });
+  }
+
+  function trimVoicesIfNeeded() {
+    while (activeVoices.size >= MAX_VOICES) {
+      const oldest = activeVoices.keys().next().value;
+      releaseNote(oldest, true);
+    }
+  }
+
+  function holdNote(voiceId, freq, velocity, midiEventTimeMs) {
+    if (activeVoices.has(voiceId)) return;
+
+    const ids = parseVoiceTriggerIds(voiceId);
+    triggerModeNoteVisual(freq, velocity, ids.keyCode, ids.midiNote);
+
+    if (!ensureLiveAudioReady()) return;
+
+    trimVoicesIfNeeded();
+
+    const params = buildToneParams(freq, velocity);
+    const startTime = resolveStartTime(midiEventTimeMs);
+    const voice = playLiveVoice(params, startTime, voiceId);
+    voice.noteFreq = freq;
+    activeVoices.set(voiceId, voice);
+    flushModeVisual({ fast: true });
+  }
+
+  function holdScaleNote(voiceId, scaleIndex, velocity, midiEventTimeMs) {
+    const preset = getPresetParams();
+    const freq = preset.scale[scaleIndex % preset.scale.length];
+    if (freq) holdNote(voiceId, freq, velocity, midiEventTimeMs);
+  }
+
+  function releaseNote(voiceId, immediate) {
+    const voice = activeVoices.get(voiceId);
+    if (!voice || !audioCtx) return;
+
+    if (isJunoFlowMode()) {
+      const ids = parseVoiceTriggerIds(voiceId);
+      triggerJunoNoteRelease(ids.keyCode, ids.midiNote);
+    }
+
+    activeVoices.delete(voiceId);
+
+    const t = audioCtx.currentTime;
+    const rel = immediate ? 0.008 : voice.release;
+    const stopAt = t + rel + 0.02;
+
+    try {
+      voice.gainNode.gain.cancelScheduledValues(t);
+      voice.gainNode.gain.setValueAtTime(Math.max(voice.gainNode.gain.value, 0.0001), t);
+      voice.gainNode.gain.exponentialRampToValueAtTime(0.0001, t + rel);
+    } catch (err) { /* ignore */ }
+
+    voice.oscillators.forEach(function(o) {
+      try { o.stop(stopAt); } catch (err) { /* ignore */ }
+    });
+    if (voice.lfo) {
+      try { voice.lfo.stop(stopAt); } catch (err) { /* ignore */ }
+    }
+  }
+
+  function playTone(freq, midiEventTimeMs, velocity) {
+    ensureAudioReady();
+    triggerModeNoteVisual(freq, velocity);
+    const params = buildToneParams(freq, velocity);
+    if (typeof midiEventTimeMs === "number") {
+      playInstrument(params, resolveStartTime(midiEventTimeMs));
+    } else {
+      playInstrument(params);
+    }
+  }
+
+  function scheduleNotes(scale) {
+    clearInterval(bpmTimer);
+    bpmTimer = setInterval(() => {
+      if (!stopped) {
+        const freq = scale[Math.floor(Math.random() * scale.length)];
+        playTone(freq);
+      }
+    }, 60000 / bpm);
+  }
+
+  // Visualizer: Juno Flow garden
+  function animate() {
+    junoFlowersActive = true;
+    if (!junoFlowersAnimId) drawJunoFrame();
+  }
+
+  $("play").addEventListener('click', () => {
+    warmAudioEngine();
+    setupMidi();
+    stopped = false;
+    setPlayingState(true);
+    const scale = getScaleFromPreset();
+    currentWaveColor = getColorFromPreset();
+    scheduleNotes(scale);
+  });
+
+  $("stop").addEventListener('click', () => {
+    stopped = true;
+    setPlayingState(false);
+    clearInterval(bpmTimer);
+  });
+
+  function updateDisplay() {
+    const display = $("infoDisplay");
+    const p = getPresetParams();
+    display.textContent =
+      "SOUND      : Juno Flowers\n" +
+      "SCALE      : [" + p.scale.join(", ") + "]\n" +
+      "OSC/WAVE   : " + getWaveformFromPreset() + "\n" +
+      "ATTACK     : " + p.attack + "s\n" +
+      "RELEASE    : " + p.release + "s\n" +
+      "DETUNE     : [" + p.detuneCents.join(", ") + "]\n" +
+      "FILTER     : " + p.filterType + " " + Math.round(synthState.filterHz) + "Hz\n" +
+      "DELAY MIX  : " + synthState.delayMix.toFixed(2) + "\n" +
+      "ECHO       : " + synthState.echoFeedback.toFixed(2) + "\n" +
+      "REVERB     : " + (0.3 + synthState.echoFeedback * 0.5).toFixed(2) + "\n" +
+      "VOLUME     : " + synthState.volume + "\n" +
+      "ROOT PITCH : " + Math.round(synthState.baseFreq) + "Hz\n" +
+      "BPM        : " + synthState.bpm +
+      "\nLFO        : " + synthState.lfoDest + " " + synthState.lfoRate.toFixed(2) + "Hz x " + synthState.lfoAmount +
+      "\nVISUAL     : Juno Flow" +
+      "\nMIDI IN    : " + (midiInEnabled ? "ON" : "OFF") +
+      "\nMIDI CHAN  : " + (midiChannel === -1 ? "All" : (Number(midiChannel) + 1)) +
+      "\nMIDI DEV   : " + getMidiStatusLine() +
+      "\nVOICES     : " + activeVoices.size + " held";
+  }
+  setInterval(updateDisplay, 500);
+
+  window.addEventListener('resize', function() {
+    if (!canvas) return;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    junoScene = null;
+    drawJunoFrame({ flush: true });
+  });
+
+  const PRESET_ORDER = ['junoflowers'];
+
+  function nextPreset() {
+    const presetEl = $("preset");
+    presetEl.value = PRESET_ORDER[0];
+    presetEl.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  function prevPreset() {
+    const presetEl = $("preset");
+    presetEl.value = PRESET_ORDER[0];
+    presetEl.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+
+  function incSlider(id, delta) {
+    const el = $(id);
+    let min = parseFloat(el.min), max = parseFloat(el.max), step = parseFloat(el.step);
+    let value = parseFloat(el.value) + delta;
+    value = Math.round(value / step) * step;
+    value = Math.max(min, Math.min(max, value));
+    el.value = value;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  /* --- MIDI Controls --- */
+  let midiChannel = 0;
+  let midiAccess = null;
+  let midiInEnabled = true;
+  let midiSetupAttempted = false;
+  const noteDebounce = {};
+  const activeMidiNotes = new Set();
+
+  /* Akai MPK Mini MK2/MK3 — Bank A pads 36-43, Bank B 44-51, knobs CC 70-77 */
+  const MPK_MINI_PADS = {
+    36: { pad: 1, label: 'Note 1', scaleIndex: 0 },
+    37: { pad: 2, label: 'Note 2', scaleIndex: 1 },
+    38: { pad: 3, label: 'Note 3', scaleIndex: 2 },
+    39: { pad: 4, label: 'Note 4', scaleIndex: 3 },
+    40: { pad: 5, label: 'Note 5', scaleIndex: 4 },
+    41: { pad: 6, label: 'Filter +', action: () => incSlider('filter', +100) },
+    42: { pad: 7, label: 'Play', action: () => $("play").click() },
+    43: { pad: 8, label: 'Stop', action: () => $("stop").click() },
+    44: { pad: 'B1', label: 'Delay +', action: () => incSlider('delay', +0.05) },
+    45: { pad: 'B2', label: 'Delay −', action: () => incSlider('delay', -0.05) },
+    46: { pad: 'B3', label: 'Echo +', action: () => incSlider('echo', +0.05) },
+    47: { pad: 'B4', label: 'Echo −', action: () => incSlider('echo', -0.05) },
+    48: { pad: 'B5', label: 'Filter +', action: () => incSlider('filter', +100) },
+    49: { pad: 'B6', label: 'Filter −', action: () => incSlider('filter', -100) },
+    50: { pad: 'B7', label: 'Volume +', action: () => incSlider('volume', +5) },
+    51: { pad: 'B8', label: 'Volume −', action: () => incSlider('volume', -5) }
+  };
+
+  const MPK_MINI_CC_MAP = {
+    1: 'filter',
+    70: 'delay',
+    71: 'echo',
+    72: 'filter',
+    73: 'volume',
+    74: 'bpm',
+    75: 'lfoRate',
+    76: 'lfoAmt',
+    77: 'freq'
+  };
+
+  const MPK_MINI_KNOBS = [
+    { cc: 70, knob: 1, label: 'Delay' },
+    { cc: 71, knob: 2, label: 'Echo' },
+    { cc: 72, knob: 3, label: 'Filter' },
+    { cc: 73, knob: 4, label: 'Volume' },
+    { cc: 74, knob: 5, label: 'BPM' },
+    { cc: 75, knob: 6, label: 'LFO Rate' },
+    { cc: 76, knob: 7, label: 'LFO Amt' },
+    { cc: 77, knob: 8, label: 'Frequency' }
+  ];
+
+  const mpkPadHighlight = {};
+  let mpkPadCells = {};
+
+  function getActiveCcMap() {
+    return MPK_MINI_CC_MAP;
+  }
+
+  function runControlAction(note, actionFn) {
+    const now = performance.now();
+    if (noteDebounce[note] && now - noteDebounce[note] < 35) return;
+    noteDebounce[note] = now;
+    actionFn();
+  }
+
+  function renderMpkLegend() {
+    const padGrid = $("mpkPadGrid");
+    const knobGrid = $("mpkKnobGrid");
+    const legend = $("mpkLegend");
+    const mpkPanel = $("mpkPanel");
+    if (!padGrid || !knobGrid || !legend || !mpkPanel) return;
+
+    padGrid.innerHTML = '';
+    knobGrid.innerHTML = '';
+    mpkPadCells = {};
+
+    /* Physical MPK Mini layout: top row pads 5-8, bottom row pads 1-4 */
+    const padLayout = [
+      [40, 41, 42, 43],
+      [36, 37, 38, 39]
+    ];
+
+    padLayout.forEach(function(row) {
+      row.forEach(function(note) {
+        const def = MPK_MINI_PADS[note];
+        const cell = document.createElement('div');
+        cell.className = 'mpk-legend__pad';
+        cell.dataset.note = String(note);
+        cell.innerHTML = '<span class="mpk-legend__pad-num">P' + def.pad + '</span>' +
+          '<span class="mpk-legend__pad-label">' + def.label + '</span>';
+        padGrid.appendChild(cell);
+        mpkPadCells[note] = cell;
+      });
+    });
+
+    MPK_MINI_KNOBS.forEach(function(k) {
+      const cell = document.createElement('div');
+      cell.className = 'mpk-legend__knob';
+      cell.innerHTML = '<span class="mpk-legend__knob-num">K' + k.knob + '</span>' +
+        '<span class="mpk-legend__knob-label">' + k.label + '</span>';
+      knobGrid.appendChild(cell);
+    });
+  }
+
+  function highlightMpkPad(note) {
+    if (!mpkPadCells[note]) return;
+    const cell = mpkPadCells[note];
+    cell.classList.add('is-active');
+    if (mpkPadHighlight[note]) clearTimeout(mpkPadHighlight[note]);
+    mpkPadHighlight[note] = setTimeout(function() {
+      cell.classList.remove('is-active');
+    }, 180);
+  }
+
+  function applyMidiMapProfile() {
+    midiChannel = 0;
+    $("midiChannelSelect").value = '0';
+    renderMpkLegend();
+    updateMidiStatus();
+  }
+
+  function detectMpkMiniDevice() {
+    if (!midiAccess) return;
+    let found = false;
+    midiAccess.inputs.forEach(function(input) {
+      if (/mpk\s*mini/i.test(input.name || '')) found = true;
+    });
+    if (found) applyMidiMapProfile();
+  }
+
+  function getMidiStatusLine() {
+    if (!navigator.requestMIDIAccess) return "Unsupported in this browser";
+    if (!midiAccess) return midiSetupAttempted ? "No access / permission denied" : "Click Play to enable";
+    const inCount = midiAccess.inputs.size;
+    const inName = $("midiInputSelect").selectedOptions[0]?.textContent || "—";
+    return inCount + " input" + (inCount === 1 ? "" : "s") + " · MPK Mini · " + inName;
+  }
+
+  function updateMidiStatus() {
+    const el = $("midiStatus");
+    if (!el) return;
+    el.textContent = getMidiStatusLine();
+  }
+
+  function setSliderFromCC(id, value) {
+    const el = $(id);
+    if (!el) return;
+    const min = parseFloat(el.min);
+    const max = parseFloat(el.max);
+    const step = parseFloat(el.step) || 1;
+    let v = min + (value / 127) * (max - min);
+    v = Math.round(v / step) * step;
+    v = Math.max(min, Math.min(max, v));
+    el.value = v;
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+
+  function handleControlChange(cc, value) {
+    const sliderId = getActiveCcMap()[cc];
+    if (sliderId) setSliderFromCC(sliderId, value);
+  }
+
+  function handleNoteOn(note, velocity, timeMs) {
+    activeMidiNotes.add(note);
+
+    if (MPK_MINI_PADS[note]) {
+      const def = MPK_MINI_PADS[note];
+      if (def.scaleIndex !== undefined) {
+        holdScaleNote('midi-' + note, def.scaleIndex, velocity, timeMs);
+      } else if (def.action) {
+        runControlAction(note, def.action);
+      }
+      highlightMpkPad(note);
+      return;
+    }
+
+    const scaleLen = getScaleFromPreset().length;
+    if (note >= 36 && note < 36 + scaleLen) {
+      holdScaleNote('midi-' + note, note - 36, velocity, timeMs);
+      return;
+    }
+
+    if (note >= 0 && note <= 127) {
+      holdNote('midi-' + note, midiNoteToFreq(note), velocity, timeMs);
+    }
+  }
+
+  function handleNoteOff(note) {
+    activeMidiNotes.delete(note);
+    releaseNote('midi-' + note);
+  }
+
+  function handleMidiMessage(e) {
+    if (!midiInEnabled) return;
+    const data = e.data;
+    if (!data || data.length < 1) return;
+
+    const status = data[0];
+    const type = status & 0xF0;
+    const channel = status & 0x0F;
+    if (midiChannel !== -1 && channel !== midiChannel) return;
+
+    if (type === 0x90 && data.length >= 3) {
+      const note = data[1];
+      const velocity = data[2];
+      if (velocity === 0) handleNoteOff(note);
+      else handleNoteOn(note, velocity, e.receivedTime);
+    } else if (type === 0x80 && data.length >= 3) {
+      handleNoteOff(data[1]);
+    } else if (type === 0xB0 && data.length >= 3) {
+      handleControlChange(data[1], data[2]);
+    }
+  }
+
+  function refreshMidiDeviceLists() {
+    if (!midiAccess) return;
+    const inputSelect = $("midiInputSelect");
+    const prevIn = inputSelect.value;
+
+    inputSelect.innerHTML = '<option value="all">All inputs</option>';
+    midiAccess.inputs.forEach(function(input) {
+      const opt = document.createElement('option');
+      opt.value = input.id;
+      opt.textContent = input.name || input.id;
+      inputSelect.appendChild(opt);
+    });
+
+    if ([...inputSelect.options].some(function(o) { return o.value === prevIn; })) {
+      inputSelect.value = prevIn;
+    }
+
+    detectMpkMiniDevice();
+    updateMidiStatus();
+  }
+
+  function bindMidiInputs() {
+    if (!midiAccess) return;
+    midiAccess.inputs.forEach(function(input) {
+      input.onmidimessage = null;
+    });
+    const selected = $("midiInputSelect").value;
+    if (selected === 'all') {
+      midiAccess.inputs.forEach(function(input) {
+        input.onmidimessage = handleMidiMessage;
+      });
+    } else {
+      const input = midiAccess.inputs.get(selected);
+      if (input) input.onmidimessage = handleMidiMessage;
+    }
+  }
+
+  function setupMidi() {
+    if (!navigator.requestMIDIAccess) {
+      updateMidiStatus();
+      return;
+    }
+    if (midiAccess) {
+      refreshMidiDeviceLists();
+      bindMidiInputs();
+      return;
+    }
+    midiSetupAttempted = true;
+    navigator.requestMIDIAccess({ sysex: false }).then(function(midi) {
+      midiAccess = midi;
+      refreshMidiDeviceLists();
+      bindMidiInputs();
+      midiAccess.onstatechange = function() {
+        refreshMidiDeviceLists();
+        bindMidiInputs();
+      };
+    }, function(err) {
+      console.warn("MIDI access denied or unavailable", err);
+      updateMidiStatus();
+    });
+  }
+
+  $("toggleMidiIn").addEventListener('click', function() {
+    midiInEnabled = !midiInEnabled;
+    $("toggleMidiIn").textContent = "MIDI In: " + (midiInEnabled ? "On" : "Off");
+    $("toggleMidiIn").setAttribute("aria-pressed", midiInEnabled ? "true" : "false");
+    updateMidiStatus();
+  });
+
+  const midiChannelSelect = $("midiChannelSelect");
+  midiChannelSelect.value = String(midiChannel);
+  midiChannelSelect.addEventListener('change', function() {
+    midiChannel = Number(this.value);
+    updateMidiStatus();
+  });
+
+  $("midiInputSelect").addEventListener('change', bindMidiInputs);
+
+  applyMidiMapProfile();
+  setupMidi();
+
+  function isFormFocused() {
+    const el = document.activeElement;
+    if (!el) return false;
+    if (playGuide && playGuide.contains(el)) return false;
+    const tag = el.tagName;
+    return tag && ['INPUT', 'SELECT', 'TEXTAREA'].includes(tag);
+  }
+
+  function releaseAllKeyboardVoices() {
+    Object.keys(KEY_SCALE_MAP).forEach(function(code) {
+      releaseNote('kb-' + code);
+    });
+    Object.keys(KEY_NOTE_MAP).forEach(function(code) {
+      releaseNote('kb-' + code);
+    });
+  }
+
+  document.addEventListener('pointerdown', warmAudioEngine, { passive: true });
+  document.addEventListener('touchstart', warmAudioEngine, { passive: true });
+  canvas.addEventListener('pointerdown', warmAudioEngine, { passive: true });
+
+  function canvasToSceneXY(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: (clientX - rect.left) * (canvas.width / rect.width),
+      y: (clientY - rect.top) * (canvas.height / rect.height)
+    };
+  }
+
+  function findFlowerAt(x, y) {
+    if (!junoScene || !junoScene.flowers) return null;
+    let best = null;
+    let bestD = 96;
+    junoScene.flowers.forEach(function(fl) {
+      const cy = _junoFlowerHeadY(fl);
+      const d = Math.hypot(fl.x - x, cy - y);
+      if (d < bestD) {
+        bestD = d;
+        best = fl;
+      }
+    });
+    return best;
+  }
+
+  function flowerToFreq(fl) {
+    return fl.noteFreq || 440;
+  }
+
+  function getPointerKey(e) {
+    return e.pointerId != null ? String(e.pointerId) : 'mouse';
+  }
+
+  function handleFlowerPointerDown(e) {
+    if (!experienceStarted || !isJunoFlowMode()) return;
+    if (e.target !== canvas) return;
+    const xy = canvasToSceneXY(e.clientX, e.clientY);
+    const fl = findFlowerAt(xy.x, xy.y);
+    if (!fl) return;
+    e.preventDefault();
+    ensureLiveAudioReady();
+    const voiceId = fl.keyCode ? 'touch-' + fl.keyCode : 'midi-' + fl.midiNote;
+    const freq = fl.noteFreq;
+    activeTouchVoices.set(getPointerKey(e), {
+      voiceId, freq, keyCode: fl.keyCode, midiNote: fl.midiNote
+    });
+    holdNote(voiceId, freq, 100);
+    if (canvas.setPointerCapture && e.pointerId != null) {
+      try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+    }
+  }
+
+  function handleFlowerPointerUp(e) {
+    const key = getPointerKey(e);
+    const entry = activeTouchVoices.get(key);
+    if (!entry) return;
+    releaseNote(entry.voiceId);
+    activeTouchVoices.delete(key);
+  }
+
+  canvas.addEventListener('pointerdown', handleFlowerPointerDown);
+  canvas.addEventListener('pointerup', handleFlowerPointerUp);
+  canvas.addEventListener('pointercancel', handleFlowerPointerUp);
+  canvas.addEventListener('pointerleave', handleFlowerPointerUp);
+
+  document.addEventListener('keydown', (e) => {
+    if (!experienceStarted) {
+      if (e.code === 'Enter') {
+        e.preventDefault();
+        startExperience();
+      }
+      return;
+    }
+
+    ensureLiveAudioReady();
+    if (e.code === 'Escape') {
+      if (playGuideOpen) {
+        e.preventDefault();
+        dismissPlayGuide();
+        return;
+      }
+      if (drawerOpen) closeDrawer();
+      if (dataPanelOpen) setDataPanelOpen(false);
+      return;
+    }
+
+    if (KEY_NOTE_MAP[e.code] !== undefined && !isFormFocused()) {
+      if (e.repeat) return;
+      e.preventDefault();
+      holdNote('kb-' + e.code, KEY_NOTE_MAP[e.code], 100);
+      return;
+    }
+
+    if (KEY_SCALE_MAP[e.code] !== undefined && !isFormFocused()) {
+      if (e.repeat) return;
+      e.preventDefault();
+      holdScaleNote('kb-' + e.code, KEY_SCALE_MAP[e.code], 100);
+      return;
+    }
+
+    if (e.code === 'Space' && !isFormFocused()) {
+      e.preventDefault();
+      if (stopped) playBtn.click();
+      else stopBtn.click();
+    }
+  });
+
+  document.addEventListener('keyup', (e) => {
+    if (KEY_NOTE_MAP[e.code] !== undefined && !isFormFocused()) {
+      e.preventDefault();
+      releaseNote('kb-' + e.code);
+      return;
+    }
+    if (KEY_SCALE_MAP[e.code] !== undefined && !isFormFocused()) {
+      e.preventDefault();
+      releaseNote('kb-' + e.code);
+    }
+  });
+
+  window.addEventListener('blur', releaseAllKeyboardVoices);
+
+  // Visualizer starts after welcome screen
+});
+</script>
+</body>
+</html>

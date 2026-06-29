@@ -1,0 +1,118 @@
+{
+  "$schema": "../docs/architecture/style-dna.schema.md",
+  "version": "1.0.0",
+  "name": "Plantasonic Botanical DNA",
+  "description": "The single source of truth for the visual identity of the Plantasonic installation. Every generation prompt, procedural variant, and renderer layer derives its look from this file. Nothing else should duplicate these values.",
+  "visualLanguage": {
+    "summary": "Hyper-detailed botanical specimens rendered as luminous, low-fidelity dream artifacts. Equal parts antique scientific illustration and retro-futurist pixel art.",
+    "keywords": [
+      "botanical",
+      "bioluminescent",
+      "specimen study",
+      "dithered",
+      "lo-fi",
+      "ethereal",
+      "analog decay",
+      "generative"
+    ],
+    "references": [
+      "19th century herbarium plates",
+      "CRT phosphor glow",
+      "risograph print misregistration",
+      "early demoscene palettes"
+    ],
+    "mood": "calm, hypnotic, alive, slightly uncanny"
+  },
+  "palette": {
+    "model": "indexed",
+    "primary": ["#0B1F17", "#123A2B", "#1F6F54", "#3DBF8B", "#8BF5C9"],
+    "accent": ["#F2C14E", "#F25C54", "#B86BFF", "#5CC9F2"],
+    "neutral": ["#05080A", "#0F1418", "#222A2E", "#9AA7AD", "#E8F0EC"],
+    "maxColors": 16,
+    "notes": "Cool botanical greens form the base. Accents are reserved for audio-reactive highlights and bloom events. Color count is capped to preserve the indexed, dithered aesthetic."
+  },
+  "background": {
+    "type": "gradient",
+    "colors": ["#05080A", "#0B1F17"],
+    "direction": "radial",
+    "vignette": 0.35,
+    "grain": 0.12,
+    "notes": "Background is intentionally near-black to maximize bloom and glow contrast against specimens."
+  },
+  "lighting": {
+    "model": "internal-emissive",
+    "keyLightTemperatureK": 4200,
+    "rimLight": true,
+    "rimColor": "#8BF5C9",
+    "bloom": {
+      "intensity": 0.6,
+      "threshold": 0.7,
+      "radius": 0.4
+    },
+    "shadow": "soft, low-contrast, never pure black",
+    "notes": "Light appears to emanate from within the plants rather than from an external source."
+  },
+  "pixelDensity": {
+    "targetResolution": [2048, 2048],
+    "renderScale": 0.5,
+    "pixelGrid": 256,
+    "upscaleStrategy": "nearest-then-soft",
+    "notes": "Assets are authored at high resolution but quantized to a coarse pixel grid for the signature lo-fi look."
+  },
+  "dithering": {
+    "enabled": true,
+    "algorithm": "bayer",
+    "matrixSize": 8,
+    "strength": 0.5,
+    "applyTo": ["gradients", "shadows", "bloom"],
+    "notes": "Ordered Bayer dithering preserves the retro print quality while keeping the color index low."
+  },
+  "texture": {
+    "rules": [
+      "organic edges, never perfectly geometric",
+      "subtle paper or film grain over every surface",
+      "veins, fibers and cellular detail must remain legible after quantization",
+      "no photorealistic specular highlights"
+    ],
+    "overlays": ["grain", "scanline", "halftone"],
+    "notes": "Texture rules apply after color quantization but before bloom."
+  },
+  "composition": {
+    "framing": "centered specimen with generous negative space",
+    "aspectRatios": ["1:1", "4:5", "9:16"],
+    "ruleOfThirds": false,
+    "symmetry": "near-symmetric with organic variation",
+    "negativeSpaceRatio": 0.4,
+    "notes": "Single hero specimen per asset. Crowding is reserved for scene composition, not individual assets."
+  },
+  "negativePrompts": [
+    "photorealistic",
+    "3d render",
+    "text",
+    "watermark",
+    "signature",
+    "human figure",
+    "harsh shadows",
+    "lens flare",
+    "plastic",
+    "oversaturated",
+    "blurry",
+    "low detail",
+    "frame",
+    "border"
+  ],
+  "promptSuffix": "botanical specimen, bioluminescent, dithered lo-fi pixel art, indexed 16 color palette, internal emissive lighting, soft bloom, film grain, centered composition, dark near-black background, hyper-detailed organic texture",
+  "animationLanguage": {
+    "easing": "easeInOutSine",
+    "baseTempo": "slow breathing, 0.1-0.4 Hz idle motion",
+    "motionPrimitives": ["sway", "pulse", "unfurl", "shimmer", "drift"],
+    "audioCoupling": "motion amplitude and bloom intensity scale with audio energy",
+    "notes": "Idle motion is always present so the installation never appears frozen."
+  },
+  "futureAIModels": {
+    "primary": "midjourney",
+    "planned": ["flux", "stable-diffusion-3", "sora", "runway", "local-sdxl"],
+    "abstraction": "All models consume the same Style DNA via promptBuilder; provider-specific syntax is handled at the adapter layer.",
+    "notes": "Style DNA is model-agnostic. Adding a provider must not require editing this file."
+  }
+}

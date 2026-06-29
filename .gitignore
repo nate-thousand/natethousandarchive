@@ -1,0 +1,11 @@
+.DS_Store
+Thumbs.db
+
+# Dependencies & build output (active prototypes)
+node_modules/
+dist/
+.vercel/
+
+# Frozen explorations — contents stay local; README explains the rule
+prototypes/_archive/*
+!prototypes/_archive/README.md

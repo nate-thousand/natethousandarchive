@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Generated + cached AI assets (data-driven, never committed)
+assets/cache/*
+assets/generated/*
+assets/source/*
+assets/videos/*
+assets/textures/*
+!assets/**/.gitkeep
+
+# Environment / secrets (model provider API keys, etc.)
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
