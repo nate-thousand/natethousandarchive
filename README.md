@@ -1,6 +1,8 @@
-# natethousandlabs-xyz
+# Prototype Lab Archive
 
 Static HTML prototypes and experiments.
+
+> **Status:** Historical prototype lab. Active flagship projects are listed on the [GitHub profile](https://github.com/nate-thousand).
 
 **The single index is [`index.html`](index.html)** — open it with Live Server (port 5501 via the
 workspace `.vscode/settings.json`). It lists **active** prototypes only.
@@ -46,3 +48,4 @@ Enforced by [`.gitignore`](.gitignore) and [`.vercelignore`](.vercelignore).
 - See the [workspace README](../README.md) for the overall structure.
 
 To add a prototype: create `prototypes/<name>/`, add a row to `index.html`. To retire one: move it to `_archive/`.
+
