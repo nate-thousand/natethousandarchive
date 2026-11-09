@@ -1,0 +1,40 @@
+/* GeneList — gene editor / readout. */
+.gene-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.gene-list--readonly {
+  gap: var(--space-sm);
+}
+
+.gene-list__row {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.gene-list__label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.gene-list__bar {
+  position: relative;
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-3);
+  margin: 0;
+  overflow: hidden;
+}
+
+.gene-list__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--gradient-accent);
+  border-radius: var(--radius-pill);
+  transition: width var(--duration-base) var(--ease-organic);
+}

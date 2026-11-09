@@ -1,0 +1,41 @@
+/* Badge — compact status label. */
+.pl-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-2xs) var(--space-sm);
+  border-radius: var(--radius-pill);
+  border: var(--border-width-hairline) solid var(--color-border-default);
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  background-color: var(--color-surface-2);
+}
+
+.pl-badge__dot {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: var(--radius-circle);
+  background-color: currentColor;
+  box-shadow: var(--glow-sm);
+}
+
+.pl-badge--accent {
+  color: var(--color-text-accent);
+  border-color: var(--color-border-accent);
+  background-color: var(--color-accent-soft);
+}
+.pl-badge--positive {
+  color: var(--color-positive);
+}
+.pl-badge--caution {
+  color: var(--color-caution);
+}
+.pl-badge--critical {
+  color: var(--color-critical);
+}
+.pl-badge--info {
+  color: var(--color-info);
+}

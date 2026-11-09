@@ -1,0 +1,92 @@
+/**
+ * Plantasia — Shared keyframe animations.
+ *
+ * Ambient, looping motion primitives that express "everything is alive". GSAP
+ * handles orchestrated/interactive motion; these CSS keyframes cover the
+ * always-on background life so the UI breathes even before JS hydrates.
+ */
+
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: var(--opacity-strong);
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: var(--opacity-full);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: var(--glow-sm);
+  }
+  50% {
+    box-shadow: var(--glow-lg);
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(1.5%, -1%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: var(--opacity-strong);
+  }
+  100% {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Reusable animation utility classes */
+.anim-breathe {
+  animation: breathe var(--duration-breath) var(--ease-breath) infinite;
+}
+
+.anim-pulse-glow {
+  animation: pulse-glow var(--duration-slower) var(--ease-breath) infinite;
+}
+
+.anim-drift {
+  animation: drift var(--duration-drift) var(--ease-breath) infinite;
+}
+
+.anim-fade-in-up {
+  animation: fade-in-up var(--duration-slow) var(--ease-bloom) both;
+}

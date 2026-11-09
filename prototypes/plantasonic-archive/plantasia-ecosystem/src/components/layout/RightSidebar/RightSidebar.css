@@ -1,0 +1,40 @@
+/* RightSidebar — information rail. */
+.right-sidebar {
+  height: 100%;
+  border-left: var(--border-width-hairline) solid var(--color-border-subtle);
+}
+
+.right-sidebar__scroll {
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--space-lg) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.right-sidebar__desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--space-md);
+}
+
+.right-sidebar__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.right-sidebar__dna {
+  display: block;
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-accent);
+  word-break: break-all;
+  letter-spacing: var(--letter-spacing-wide);
+  padding: var(--space-sm);
+  margin-bottom: var(--space-md);
+  background-color: var(--color-bg-sunken);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-hairline) solid var(--color-border-subtle);
+}

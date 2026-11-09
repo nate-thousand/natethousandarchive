@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Plantasia App v3 – Sub-Oscillator Control with Unique Visuals</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      color: white;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+    }
+    .ui {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      z-index: 2;
+    }
+    .ui label {
+      font-size: 10px;
+      display: block;
+      text-align: center;
+    }
+    .ui select,
+    .ui input[type="range"] {
+      width: 90px;
+      background: black;
+      color: white;
+      border: 1px solid white;
+      font-size: 10px;
+    }
+    .ui button {
+      font-size: 12px;
+      padding: 4px 8px;
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+      cursor: pointer;
+    }
+    #infoDisplay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 3;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      font-size: 12px;
+      padding: 10px;
+      display: none;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="waveCanvas"></canvas>
+  <div id="infoDisplay"></div>
+  <div class="ui">
+    <div><label>Preset</label>
+      <select id="preset">
+        <option>Root Phonotropism</option>
+        <option>Germination Kickstart</option>
+        <option>Biomass Builder</option>
+        <option>Hormonal Harmony</option>
+        <option>Leaf Resonance</option>
+        <option>Algal Bloom</option>
+        <option>Leaf Growth Accelerator</option>
+        <option>Nectar Boost</option>
+        <option>Cereal Sprout</option>
+        <option>Fruiting Uplift</option>
+        <option>Buzz Pollination</option>
+        <option>Alyssum Sprouter Surround</option>
+      </select>
+    </div>
+    <div><label>Delay</label><input type="range" id="delay" min="0.01" max="2.0" step="0.01" value="0.6" /></div>
+    <div><label>Echo</label><input type="range" id="echo" min="0" max="1.0" step="0.01" value="0.4" /></div>
+    <div><label>Filter</label><input type="range" id="filter" min="100" max="8000" step="10" value="1200" /></div>
+    <div><label>Sub Level</label><input type="range" id="subLevel" min="0" max="0.2" step="0.01" value="0.08" /></div>
+    <div><label>Vol</label><input type="range" id="volume" min="0" max="100" value="60" /></div>
+    <div><label>BPM</label><input type="range" id="bpm" min="40" max="180" value="90" /></div>
+    <button id="play">PLAY</button>
+    <button id="stop">STOP</button>
+    <button id="toggleDisplay">TOGGLE DATA</button>
+  </div>
+
+  <script>
+    // Core Setup
+    let audioCtx, analyser, masterGain, reverbNode, bufferLength, dataArray;
+    let bpm = 90, bpmTimer = null, stopped = true;
+    let trailFrames = [], currentWaveColor = "#00FF7F";
+    let canvas, ctx;
+
+    // Visual constants
+    const VISUAL_FRAMES     = 12;
+    const VISUAL_ALPHA_BASE = 0.05;
+    const VISUAL_ALPHA_MAX  = 0.2;
+
+    // Human A-minor pentatonic
+    const humanPentatonic = [220.00, 261.63, 293.66, 329.63, 392.00];
+
+    // Preset Settings
+    const presetSettings = {
+      "Root Phonotropism":         { scale: humanPentatonic, color: "#00FF7F" },
+      "Germination Kickstart":     { scale: humanPentatonic, color: "#A0522D" },
+      "Biomass Builder":           { scale: humanPentatonic, color: "#228B22" },
+      "Hormonal Harmony":          { scale: humanPentatonic, color: "#FFD700" },
+      "Leaf Resonance":            { scale: humanPentatonic, color: "#008000" },
+      "Algal Bloom":               { scale: humanPentatonic, color: "#00FA9A" },
+      "Leaf Growth Accelerator":   { scale: humanPentatonic, color: "#7CFC00" },
+      "Nectar Boost":              { scale: humanPentatonic, color: "#FF69B4" },
+      "Cereal Sprout":             { scale: humanPentatonic, color: "#F4A460" },
+      "Fruiting Uplift":           { scale: humanPentatonic, color: "#FF4500" },
+      "Buzz Pollination":          { scale: humanPentatonic, color: "#FFFF00" },
+      "Alyssum Sprouter Surround": { scale: humanPentatonic, color: "#EE82EE" }
+    };
+
+    function getScaleFromPreset(val) {
+      return presetSettings[val]?.scale || humanPentatonic;
+    }
+    function getColorFromPreset(val) {
+      return presetSettings[val]?.color || "#FFFFFF";
+    }
+
+    function initAudio() {
+      if (audioCtx) return;
+      canvas = document.getElementById("waveCanvas");
+      ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048;
+      bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = parseFloat(volume.value)/100;
+
+      // Short, warm reverb tail
+      reverbNode = audioCtx.createDelay();
+      const reverbFeedback = audioCtx.createGain();
+      reverbNode.delayTime.value = 0.3;
+      reverbFeedback.gain.value  = 0.3;
+      reverbNode.connect(reverbFeedback);
+      reverbFeedback.connect(reverbNode);
+      reverbNode.connect(masterGain);
+
+      // Gentle chorus
+      const chorus = audioCtx.createDelay();
+      const depth = audioCtx.createGain();
+      depth.gain.value = 0.003;
+      const lfo = audioCtx.createOscillator();
+      lfo.frequency.value = 0.1;
+      lfo.connect(depth).connect(chorus.delayTime);
+      lfo.start();
+      masterGain.connect(chorus);
+      chorus.connect(audioCtx.destination);
+
+      masterGain.connect(audioCtx.destination);
+      animate();
+    }
+
+    function playTone(freq) {
+      const now = audioCtx.currentTime;
+
+      // Filter
+      const filterNode = audioCtx.createBiquadFilter();
+      filterNode.type = "lowpass";
+      filterNode.frequency.value = Math.min(parseFloat(filter.value), 5000);
+
+      // Delay & feedback
+      const delayNode = audioCtx.createDelay();
+      delayNode.delayTime.value = parseFloat(delay.value);
+      const feedbackNode = audioCtx.createGain();
+      feedbackNode.gain.value = parseFloat(echo.value);
+
+      // ADSR
+      const gainNode = audioCtx.createGain();
+      gainNode.gain.setValueAtTime(0, now);
+      gainNode.gain.linearRampToValueAtTime(0.18, now + 0.2);
+      gainNode.gain.setValueAtTime(0.18, now + 1.5);
+      gainNode.gain.linearRampToValueAtTime(0, now + 4.0);
+
+      // Pan
+      const panNode = audioCtx.createStereoPanner();
+      panNode.pan.value = 0;
+
+      // 3-voice sine detune
+      [-0.2,0,0.2].forEach(offset=>{
+        const o = audioCtx.createOscillator();
+        o.type="sine";
+        o.frequency.value = freq*(1+offset/100);
+        o.connect(gainNode);
+        o.start(now);
+        o.stop(now+4.0);
+      });
+
+      // Sub-oscillator level control
+      const subGain = audioCtx.createGain();
+      subGain.gain.setValueAtTime(parseFloat(subLevel.value), now);
+      const subOsc = audioCtx.createOscillator();
+      subOsc.type="sine";
+      subOsc.frequency.value = freq/2;
+      subOsc.connect(subGain).connect(gainNode);
+      subOsc.start(now);
+      subOsc.stop(now+4.0);
+
+      // Gentle triangle for warmth
+      const triGain = audioCtx.createGain();
+      triGain.gain.setValueAtTime(0.04, now);
+      const tri = audioCtx.createOscillator();
+      tri.type="triangle";
+      tri.frequency.value = freq;
+      tri.connect(triGain).connect(gainNode);
+      tri.start(now);
+      tri.stop(now+4.0);
+
+      // Chain
+      gainNode.connect(panNode);
+      panNode.connect(filterNode);
+      filterNode.connect(delayNode);
+      delayNode.connect(feedbackNode);
+      feedbackNode.connect(delayNode);
+      delayNode.connect(reverbNode);
+      gainNode.connect(analyser);
+    }
+
+    function scheduleNotes(scale) {
+      clearInterval(bpmTimer);
+      bpmTimer = setInterval(()=>{
+        if(!stopped){
+          const freq = scale[Math.floor(Math.random()*scale.length)];
+          playTone(freq);
+        }
+      },60000/bpm);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      analyser.getByteTimeDomainData(dataArray);
+      const w = canvas.width, h = canvas.height;
+
+      // Fade
+      ctx.fillStyle = "rgba(0,0,0,0.1)";
+      ctx.fillRect(0, 0, w, h);
+
+      // Trail
+      if (trailFrames.length > VISUAL_FRAMES) trailFrames.shift();
+      trailFrames.push([...dataArray]);
+
+      const p = preset.value;
+      currentWaveColor = getColorFromPreset(p);
+      ctx.shadowBlur = 16;
+      ctx.shadowColor = currentWaveColor;
+
+      switch (p) {
+        case 'Root Phonotropism': {
+          const grad = ctx.createRadialGradient(w/2, h, 0, w/2, h, h*0.8);
+          grad.addColorStop(0, currentWaveColor);
+          grad.addColorStop(1, "#000");
+          ctx.strokeStyle = grad; ctx.lineWidth = 2;
+          const data = trailFrames[trailFrames.length-1];
+          data.forEach((v,i) => {
+            if (i % 40) return;
+            const norm = (v-128)/128;
+            const angle = (i/dataArray.length)*Math.PI*2 - Math.PI/2;
+            const len = norm * h/2;
+            const x0 = w/2, y0 = h;
+            const x1 = x0 + Math.cos(angle)*len;
+            const y1 = y0 + Math.sin(angle)*len;
+            ctx.beginPath(); ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke();
+          });
+          break;
+        }
+        case 'Germination Kickstart': {
+          const grad = ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,h/3);
+          grad.addColorStop(0, currentWaveColor);
+          grad.addColorStop(1, "#000");
+          ctx.strokeStyle = grad; ctx.lineWidth = 3;
+          const avg = dataArray.reduce((a,b)=>a+b)/bufferLength;
+          const baseR = ((avg-128)/128)*(Math.min(w,h)/4) + Math.min(w,h)/4;
+          for (let i=1; i<=5; i++) {
+            ctx.beginPath();
+            ctx.arc(w/2,h/2, baseR * i/5, 0, 2*Math.PI);
+            ctx.stroke();
+          }
+          break;
+        }
+        case 'Biomass Builder': {
+          const grad = ctx.createLinearGradient(0,0,w,0);
+          grad.addColorStop(0, currentWaveColor);
+          grad.addColorStop(1, "#000");
+          ctx.strokeStyle = grad; ctx.lineWidth = 6;
+          ctx.beginPath();
+          let x = 0, slice = w / bufferLength;
+          dataArray.forEach((v,i) => {
+            const y = ((v-128)/128)*(h/2*0.9) + h/2;
+            i===0? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+            x += slice;
+          });
+          ctx.stroke();
+          break;
+        }
+        case 'Hormonal Harmony': {
+          const grad = ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,h/2);
+          grad.addColorStop(0, currentWaveColor);
+          grad.addColorStop(1, "#000");
+          ctx.fillStyle = grad;
+          const amp = dataArray[Math.floor(bufferLength/2)];
+          const r = ((amp-128)/128)*(Math.min(w,h)/3) + Math.min(w,h)/6;
+          ctx.beginPath();
+          ctx.arc(w/2,h/2,r,0,2*Math.PI);
+          ctx.fill();
+          break;
+        }
+        case 'Leaf Resonance': {
+          const grad = ctx.createLinearGradient(0,0,0,h);
+          grad.addColorStop(0, "#000");
+          grad.addColorStop(1, currentWaveColor);
+          ctx.fillStyle = grad;
+          const barW = w / 50;
+          for (let i=0; i<50; i++) {
+            const idx = Math.floor(i/50 * bufferLength);
+            const norm = (dataArray[idx]-128)/128;
+            const barH = Math.abs(norm) * h/2;
+            ctx.fillRect(i*barW, h-barH, barW*0.8, barH);
+          }
+          break;
+        }
+        case 'Algal Bloom': {
+          ctx.fillStyle = currentWaveColor;
+          for (let i=0; i<200; i++) {
+            const idx = Math.floor(Math.random()*bufferLength);
+            const norm = (dataArray[idx]-128)/128;
+            const x = Math.random()*w;
+            const y = h/2 + norm * h/4;
+            const size = Math.random()*4 + 1;
+            ctx.beginPath();
+            ctx.arc(x,y,size,0,2*Math.PI);
+            ctx.fill();
+          }
+          break;
+        }
+        case 'Leaf Growth Accelerator': {
+          const grad = ctx.createLinearGradient(0,0,w,0);
+          grad.addColorStop(0, "#000");
+          grad.addColorStop(1, currentWaveColor);
+          ctx.fillStyle = grad;
+          const cols = 40, colW = w/cols;
+          for (let i=0; i<cols; i++) {
+            const idx = Math.floor(i/cols * bufferLength);
+            const norm = (dataArray[idx]-128)/128;
+            const hgt = Math.abs(norm) * h/2;
+            ctx.fillRect(i*colW, h - hgt, colW*0.8, hgt);
+          }
+          break;
+        }
+        case 'Nectar Boost': {
+          ctx.fillStyle = currentWaveColor;
+          const step = 50;
+          for (let gx=step/2; gx<w; gx+=step) {
+            for (let gy=step/2; gy<h; gy+=step) {
+              const idx = Math.floor((gx/w) * bufferLength);
+              const norm = (dataArray[idx]-128)/128;
+              const sz = Math.abs(norm)*10 + 2;
+              ctx.beginPath();
+              ctx.arc(gx,gy,sz,0,2*Math.PI);
+              ctx.fill();
+            }
+          }
+          break;
+        }
+        case 'Cereal Sprout': {
+          ctx.strokeStyle = currentWaveColor;
+          ctx.lineWidth = 1;
+          ctx.globalAlpha = 0.3;
+          const spacing = 60;
+          for (let gx=0; gx<w; gx+=spacing) {
+            ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,h); ctx.stroke();
+          }
+          for (let gy=0; gy<h; gy+=spacing) {
+            ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(w,gy); ctx.stroke();
+          }
+          ctx.globalAlpha = 1;
+          break;
+        }
+        case 'Fruiting Uplift': {
+          ctx.fillStyle = currentWaveColor;
+          let posX = 0, inc = w/bufferLength;
+          dataArray.forEach(v => {
+            if (v > 200) {
+              const y = ((v-128)/128)*(h/2*0.9) + h/2;
+              ctx.beginPath();
+              ctx.arc(posX, y, 6, 0, 2*Math.PI);
+              ctx.fill();
+            }
+            posX += inc;
+          });
+          break;
+        }
+        case 'Buzz Pollination': {
+          ctx.fillStyle = currentWaveColor;
+          for (let i=0; i<50; i++) {
+            if (Math.random() > 0.8) {
+              const x = Math.random()*w;
+              const y = Math.random()*h;
+              ctx.beginPath();
+              ctx.arc(x,y,Math.random()*3+1,0,2*Math.PI);
+              ctx.fill();
+            }
+          }
+          break;
+        }
+        case 'Alyssum Sprouter Surround': {
+          const grad = ctx.createLinearGradient(0,0,w,0);
+          grad.addColorStop(0, currentWaveColor);
+          grad.addColorStop(1, "#000");
+          ctx.strokeStyle = grad; ctx.lineWidth = 2;
+          [1, -1].forEach(dir => {
+            ctx.beginPath();
+            let x=0, slice = w/bufferLength;
+            dataArray.forEach((v,i) => {
+              const y = h/2 + dir * ((v-128)/128)*(h/2*0.9);
+              i===0? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+              x+=slice;
+            });
+            ctx.stroke();
+          });
+          break;
+        }
+      }
+
+      // reset
+      ctx.shadowBlur = 0;
+    }
+
+    // Event Listeners
+    document.getElementById('play').addEventListener('click', ()=>{
+      initAudio();
+      stopped=false;
+      currentWaveColor=getColorFromPreset(preset.value);
+      scheduleNotes(getScaleFromPreset(preset.value));
+    });
+    document.getElementById('stop').addEventListener('click', ()=>{
+      stopped=true;
+      clearInterval(bpmTimer);
+    });
+    document.getElementById('bpm').addEventListener('input',e=>{
+      bpm=parseInt(e.target.value);
+      if(!stopped) scheduleNotes(getScaleFromPreset(preset.value));
+    });
+    document.getElementById('preset').addEventListener('change',()=>{
+      currentWaveColor=getColorFromPreset(preset.value);
+      if(!stopped) scheduleNotes(getScaleFromPreset(preset.value));
+    });
+
+    // Display Toggle & Update
+    const display = document.getElementById("infoDisplay");
+    document.getElementById("toggleDisplay").addEventListener("click",()=>{
+      display.style.display = display.style.display==="none"?"block":"none";
+    });
+    function updateDisplay(){
+      display.textContent =
+        "PRESET : "+preset.value+"\n"+
+        "DELAY  : "+delay.value+"\n"+
+        "ECHO   : "+echo.value+"\n"+
+        "FILTER : "+filter.value+"\n"+
+        "SUB    : "+subLevel.value+"\n"+
+        "VOL    : "+volume.value+"\n"+
+        "BPM    : "+bpm;
+    }
+    setInterval(updateDisplay,250);
+  </script>
+</body>
+</html>

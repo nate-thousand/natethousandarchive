@@ -1,0 +1,41 @@
+/* Divider — hairline separator. */
+.pl-divider {
+  border: none;
+  background-color: var(--color-border-subtle);
+  flex-shrink: 0;
+}
+
+.pl-divider--horizontal {
+  width: 100%;
+  height: var(--border-width-hairline);
+}
+
+.pl-divider--vertical {
+  width: var(--border-width-hairline);
+  align-self: stretch;
+}
+
+.pl-divider--space-none {
+  margin: 0;
+}
+.pl-divider--space-sm {
+  margin: var(--space-sm) 0;
+}
+.pl-divider--space-md {
+  margin: var(--space-lg) 0;
+}
+.pl-divider--space-lg {
+  margin: var(--space-2xl) 0;
+}
+
+.pl-divider-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.pl-divider-label__line {
+  flex: 1;
+  height: var(--border-width-hairline);
+  background-color: var(--color-border-subtle);
+}

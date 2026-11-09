@@ -1,0 +1,64 @@
+/* Page — routed page scaffold. */
+.page {
+  min-height: 100%;
+  padding: var(--space-2xl) var(--space-xl) var(--space-4xl);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.page--narrow {
+  max-width: 48rem;
+}
+.page--wide {
+  max-width: 72rem;
+}
+.page--full {
+  max-width: var(--layout-content-max-width);
+}
+
+/* Immersive pages let the ecosystem dominate behind a transparent surface. */
+.page--immersive {
+  background: transparent;
+  pointer-events: none;
+}
+.page--immersive > * {
+  pointer-events: auto;
+}
+
+.page__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.page__title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-light);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.page__lede {
+  margin-top: var(--space-sm);
+  max-width: 46rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-relaxed);
+}
+
+.page__actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+@media (max-width: 575px) {
+  .page {
+    padding: var(--space-xl) var(--space-lg) var(--space-3xl);
+  }
+  .page__title {
+    font-size: var(--font-size-2xl);
+  }
+}

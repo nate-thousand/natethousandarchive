@@ -1,0 +1,3 @@
+export { Panel } from './Panel';
+export type { PanelProps, PanelVariant } from './Panel';
+import './Panel.css';

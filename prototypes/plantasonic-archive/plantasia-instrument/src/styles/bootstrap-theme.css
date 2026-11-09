@@ -1,0 +1,32 @@
+:root {
+  --bs-body-bg: var(--plantasia-color-background);
+  --bs-body-color: var(--plantasia-color-text-primary);
+  --bs-primary: var(--plantasia-color-organism);
+  --bs-secondary: var(--plantasia-color-text-secondary);
+  --bs-border-color: var(--plantasia-color-border);
+  --bs-border-radius: var(--plantasia-radius-md);
+  --bs-font-sans-serif: var(--plantasia-font-mono);
+  --bs-font-monospace: var(--plantasia-font-mono);
+  --bs-card-bg: var(--plantasia-color-surface-elevated);
+  --bs-card-border-color: var(--plantasia-color-border);
+  --bs-link-color: var(--plantasia-color-organism);
+}
+
+body {
+  background:
+    radial-gradient(circle at 18% 12%, rgba(127, 216, 143, 0.12), transparent 24rem),
+    radial-gradient(circle at 82% 4%, rgba(128, 216, 195, 0.08), transparent 26rem),
+    var(--bs-body-bg);
+  color: var(--bs-body-color);
+  font-family: var(--bs-font-sans-serif);
+}
+
+::selection {
+  background: rgba(127, 216, 143, 0.3);
+  color: var(--plantasia-color-text-primary);
+}
+
+:focus-visible {
+  outline: 2px solid var(--bs-primary);
+  outline-offset: 2px;
+}

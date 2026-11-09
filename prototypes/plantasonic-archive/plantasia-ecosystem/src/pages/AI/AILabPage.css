@@ -1,0 +1,62 @@
+/* AILabPage. */
+.ai-lab__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 768px) {
+  .ai-lab__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .ai-lab__grid > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+.ai-lab__text {
+  font-size: var(--font-size-md);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--space-md);
+}
+
+.ai-lab__text--accent {
+  color: var(--color-text-accent);
+}
+
+.ai-lab__dna {
+  display: block;
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-accent);
+  word-break: break-all;
+  padding: var(--space-sm);
+  background-color: var(--color-bg-sunken);
+  border-radius: var(--radius-sm);
+  border: var(--border-width-hairline) solid var(--color-border-subtle);
+}
+
+.ai-lab__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+}
+
+.ai-lab__caps {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: var(--space-sm);
+}
+
+.ai-lab__cap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  background-color: var(--color-surface-2);
+  border: var(--border-width-hairline) solid var(--color-border-subtle);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}

@@ -1,0 +1,50 @@
+/**
+ * Plantasia — Raw color palette (primitive tokens).
+ *
+ * These are the only place in the codebase where literal color values live.
+ * Never reference these directly in components — use the semantic tokens in
+ * `semantic.css` instead. The palette is monochromatic and organic: black,
+ * charcoal, deep forest, moss, muted lime, and warm white, each with a tonal
+ * scale for layering atmospheric depth.
+ */
+:root {
+  /* Black — the void the ecosystem grows from (green-tinted, never pure #000) */
+  --palette-black-900: #050706;
+  --palette-black-800: #070a08;
+  --palette-black-700: #0a0e0c;
+
+  /* Charcoal — surfaces and panels */
+  --palette-charcoal-700: #0e120f;
+  --palette-charcoal-600: #141a16;
+  --palette-charcoal-500: #1a221d;
+  --palette-charcoal-400: #222b25;
+
+  /* Deep Forest — raised surfaces, active soil */
+  --palette-forest-700: #16241b;
+  --palette-forest-600: #1d3326;
+  --palette-forest-500: #264332;
+  --palette-forest-400: #325a43;
+
+  /* Moss — secondary accents, living matter */
+  --palette-moss-600: #3f5e46;
+  --palette-moss-500: #4a6b50;
+  --palette-moss-400: #6f8f6a;
+  --palette-moss-300: #8fae84;
+
+  /* Muted Lime — the primary accent: new growth, energy, signal */
+  --palette-lime-600: #9bbf57;
+  --palette-lime-500: #b7d36a;
+  --palette-lime-400: #c7e08a;
+  --palette-lime-300: #d8eda8;
+
+  /* Warm White — text and highlights, never clinical pure white */
+  --palette-white-500: #d6dccb;
+  --palette-white-400: #e4e9d8;
+  --palette-white-300: #eef2e6;
+  --palette-white-200: #f4f6ec;
+
+  /* Functional hues — kept desaturated to honor the monochrome direction */
+  --palette-amber-500: #d9b25a;
+  --palette-rose-500: #c97f72;
+  --palette-cyan-500: #7fb8a6;
+}

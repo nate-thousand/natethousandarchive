@@ -1,0 +1,86 @@
+/* TopBar — slim status & identity bar. */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  height: 100%;
+  padding: 0 var(--space-md);
+  border-bottom: var(--border-width-hairline) solid var(--color-border-subtle);
+}
+
+.topbar__section {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-width: 0;
+}
+
+.topbar__section--center {
+  flex: 1;
+  justify-content: center;
+}
+
+.topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.topbar__mark {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: var(--radius-circle);
+  background: var(--gradient-accent);
+  box-shadow: var(--glow-md);
+}
+
+.topbar__title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.topbar__version {
+  font-size: var(--font-size-2xs);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.topbar__organism {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: var(--line-height-tight);
+  min-width: 0;
+}
+
+.topbar__organism-name {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 40vw;
+}
+
+.topbar__organism-species {
+  font-size: var(--font-size-2xs);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.topbar__expert {
+  display: none;
+}
+
+/* Show the drawer toggles only below desktop; expert switch only on desktop. */
+@media (min-width: 992px) {
+  .topbar__drawer-toggle {
+    display: none;
+  }
+
+  .topbar__expert {
+    display: inline-flex;
+  }
+}

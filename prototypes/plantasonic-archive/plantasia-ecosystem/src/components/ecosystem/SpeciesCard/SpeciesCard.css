@@ -1,0 +1,70 @@
+/* SpeciesCard — selectable archetype card. */
+.species-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  text-align: left;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface-1);
+  border: var(--border-width-thin) solid var(--color-border-subtle);
+  transition:
+    border-color var(--duration-base) var(--ease-organic),
+    transform var(--duration-base) var(--ease-organic),
+    box-shadow var(--duration-base) var(--ease-organic);
+}
+
+.species-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-border-default);
+  box-shadow: var(--elevation-2);
+}
+
+.species-card--active {
+  border-color: var(--color-border-accent);
+  box-shadow: var(--glow-md);
+}
+
+.species-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-circle);
+  background: var(--gradient-glass);
+  border: var(--border-width-thin) solid var(--color-border-subtle);
+  color: var(--color-text-accent);
+}
+
+.species-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.species-card__name {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+}
+
+.species-card__binomial {
+  font-size: var(--font-size-2xs);
+  font-style: italic;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-muted);
+}
+
+.species-card__desc {
+  margin-top: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+.species-card__footer {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  margin-top: auto;
+}

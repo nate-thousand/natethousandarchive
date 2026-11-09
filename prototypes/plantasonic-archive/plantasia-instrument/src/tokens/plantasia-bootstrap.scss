@@ -1,0 +1,79 @@
+/**
+ * plantasia-bootstrap.scss
+ *
+ * Override Bootstrap 5.0.2 Sass variables using Plantasia design tokens.
+ * Compile with Bootstrap's SCSS — never edit Bootstrap source files.
+ *
+ * Usage in a project:
+ *   1. Import this file before importing "bootstrap/scss/bootstrap".
+ *   2. Keep product token decisions documented in docs/design-system/.
+ */
+
+// --- Color tokens -> Bootstrap theme colors ---
+// See docs/design-system/COLOR_SYSTEM.md and DESIGN_TOKENS.md
+// Plantasia maps AI-native semantic roles to a calm, botanical dark interface.
+
+$primary:       #7fd88f !default; // color/primary: growth, main cultivation action
+$secondary:     #8b9f8c !default; // color/secondary: quiet secondary actions
+$success:       #9be886 !default; // color/status/success: bloom, stable growth
+$info:          #80d8c3 !default; // color/status/info + accent: harmonic signal
+$warning:       #d8c978 !default; // color/status/warning: unstable but musical variation
+$danger:        #e17878 !default; // color/status/error: pruning/destructive actions
+$light:         #eff6e9 !default; // color/surface/raised on light examples
+$dark:          #0c120d !default; // color/surface/default dark
+
+$body-bg:       #081009 !default;
+$body-color:    #e7f2df !default;
+$link-color:    $primary !default;
+$link-hover-color: #b8f5aa !default;
+$border-color:  rgba(183, 220, 166, 0.2) !default;
+
+// --- Typography tokens ---
+// See docs/design-system/TYPOGRAPHY.md
+
+$font-family-sans-serif: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace !default;
+$font-family-monospace:  ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace !default;
+$font-size-base:         1rem !default;
+$line-height-base:       1.55 !default;
+
+$headings-font-weight:   500 !default;
+$headings-line-height:   1.15 !default;
+
+// --- Spacing ---
+// Bootstrap uses $spacer as base (1rem). See docs/design-system/SPACING.md
+
+$spacer: 1rem !default;
+
+// --- Border radius ---
+// See docs/design-system/DESIGN_TOKENS.md
+
+$border-radius:    0.25rem !default;
+$border-radius-sm: 0.125rem !default;
+$border-radius-lg: 0.75rem !default;
+
+// --- Shadows / elevation ---
+// See docs/design-system/DESIGN_TOKENS.md
+
+$box-shadow:    0 0.75rem 2rem rgba(4, 16, 6, 0.36) !default;
+$box-shadow-sm: 0 0.25rem 1rem rgba(4, 16, 6, 0.24) !default;
+$box-shadow-lg: 0 1.5rem 4rem rgba(4, 16, 6, 0.52) !default;
+
+// --- Component surface tuning ---
+
+$card-bg: rgba(15, 27, 16, 0.92) !default;
+$card-border-color: $border-color !default;
+$modal-content-bg: #0f1b10 !default;
+$dropdown-bg: #0f1b10 !default;
+$dropdown-border-color: $border-color !default;
+$input-bg: rgba(231, 242, 223, 0.06) !default;
+$input-color: $body-color !default;
+$input-border-color: rgba(183, 220, 166, 0.28) !default;
+$input-focus-border-color: $primary !default;
+
+// --- Breakpoints (Bootstrap 5.0.2 defaults; document product changes in docs/design-system/GRID.md) ---
+// $grid-breakpoints: ( xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px, xxl: 1400px );
+
+// --- Enable optional Bootstrap features as needed ---
+// $enable-rounded: true;
+// $enable-shadows: true;
+// $enable-gradients: false;

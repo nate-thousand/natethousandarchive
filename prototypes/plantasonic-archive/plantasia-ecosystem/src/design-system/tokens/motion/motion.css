@@ -1,0 +1,32 @@
+/**
+ * Plantasia — Motion tokens: durations, easings, and named animation curves.
+ *
+ * Nothing in Plantasia ever moves linearly. Easings are organic — slow in,
+ * gentle out — to evoke breathing and growth. Durations are deliberately long;
+ * the ecosystem is calm. When `prefers-reduced-motion` is set, the global
+ * stylesheet collapses these to near-instant.
+ */
+:root {
+  /* Durations */
+  --duration-instant: 80ms;
+  --duration-fast: 180ms;
+  --duration-base: 320ms;
+  --duration-slow: 600ms;
+  --duration-slower: 1200ms;
+  --duration-breath: 6000ms; /* one full breathing cycle */
+  --duration-drift: 24000ms; /* ambient camera/background drift */
+
+  /* Easings — organic, never harsh */
+  --ease-organic: cubic-bezier(0.32, 0.04, 0.18, 1); /* default growth ease */
+  --ease-breath: cubic-bezier(0.45, 0, 0.55, 1); /* symmetric in/out */
+  --ease-bloom: cubic-bezier(0.16, 1, 0.3, 1); /* expressive overshoot-free */
+  --ease-settle: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-emphasis: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-soft: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out-soft: cubic-bezier(0, 0, 0.2, 1);
+
+  /* Delays for staggered entrances */
+  --stagger-xs: 40ms;
+  --stagger-sm: 80ms;
+  --stagger-md: 140ms;
+}

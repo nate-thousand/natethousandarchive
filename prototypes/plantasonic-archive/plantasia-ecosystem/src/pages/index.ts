@@ -1,0 +1,10 @@
+/** Plantasia — Pages barrel. */
+export { HomePage } from './Home/HomePage';
+export { StudioPage } from './Studio/StudioPage';
+export { PerformancePage } from './Performance/PerformancePage';
+export { SpeciesLibraryPage } from './Species/SpeciesLibraryPage';
+export { PresetsPage } from './Presets/PresetsPage';
+export { AILabPage } from './AI/AILabPage';
+export { SettingsPage } from './Settings/SettingsPage';
+export { DocsPage } from './Docs/DocsPage';
+export { AboutPage } from './About/AboutPage';

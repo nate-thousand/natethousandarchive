@@ -1,0 +1,340 @@
+/**
+ * Plantasia synth app — layout and component styles
+ * Uses Foundation tokens from foundation/bootstrap/CUSTOM.css
+ */
+
+html,
+body.plantasia-app {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+  width: 100vw;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  overscroll-behavior: none;
+}
+
+.plantasia-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+/* Header */
+.plantasia-header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface-overlay);
+  border-bottom: 1px solid var(--color-border-subtle);
+  z-index: 20;
+}
+
+.plantasia-header__back {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+
+.plantasia-header__back:hover {
+  color: var(--color-primary);
+}
+
+.plantasia-header__title {
+  flex: 1;
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.plantasia-header__status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.plantasia-header__status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-border-default);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.plantasia-header__status-dot.is-playing {
+  background: var(--color-primary);
+  box-shadow: var(--shadow-glow);
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Stage (canvas area) */
+.plantasia-stage {
+  flex: 1 1 auto;
+  position: relative;
+  min-height: 0;
+  background: var(--color-surface-default);
+}
+
+#waveCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  background: var(--color-surface-default);
+  transition: box-shadow 0.3s;
+}
+
+#waveCanvas.is-playing {
+  box-shadow: inset 0 0 40px rgba(58, 247, 121, 0.08);
+}
+
+/* Info panel */
+#infoDisplay {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 5;
+  background: var(--color-surface-overlay);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-xs);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
+  display: none;
+  white-space: pre;
+  letter-spacing: 0.04em;
+  max-width: 85vw;
+  word-break: break-word;
+  backdrop-filter: blur(8px);
+}
+
+/* MIDI legend */
+#toggleLegend {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: 16;
+}
+
+#midiLegend {
+  position: absolute;
+  top: calc(var(--space-3) + 2.5rem);
+  right: var(--space-3);
+  z-index: 15;
+  display: none;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background: var(--color-surface-overlay);
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-subtle);
+  gap: var(--space-2);
+  max-width: calc(100vw - var(--space-5));
+  box-shadow: var(--shadow-md);
+  align-items: flex-start;
+  pointer-events: none;
+  font-size: var(--font-size-xs);
+  backdrop-filter: blur(8px);
+}
+
+.legend-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-surface-sunken);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-subtle);
+  font-size: 0.625rem;
+  color: var(--color-text-primary);
+  min-width: 44px;
+  text-align: center;
+  letter-spacing: 0.02em;
+  transition: border 0.2s, box-shadow 0.2s;
+  word-break: break-word;
+}
+
+.legend-label {
+  font-weight: 700;
+  font-size: var(--font-size-xs);
+  color: var(--color-primary);
+}
+
+/* Control panel */
+.plantasia-controls {
+  flex: 0 0 auto;
+  background: var(--color-surface-overlay);
+  border-top: 2px solid var(--color-border-default);
+  box-shadow: 0 -3px 18px rgba(0, 0, 0, 0.5);
+  padding: var(--space-2) var(--space-3);
+  max-height: 42vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 10;
+  backdrop-filter: blur(12px);
+}
+
+.plantasia-controls__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: var(--space-2);
+  align-items: end;
+}
+
+.plantasia-control {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.plantasia-control__label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-1);
+  margin-bottom: var(--space-1);
+}
+
+.plantasia-control__value {
+  font-size: var(--font-size-xs);
+  color: var(--color-primary);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.plantasia-preset-swatch {
+  width: 100%;
+  height: 4px;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-1);
+  background: var(--color-primary-muted);
+  transition: background 0.3s;
+}
+
+.plantasia-transport {
+  display: flex;
+  gap: var(--space-2);
+  grid-column: 1 / -1;
+  justify-content: center;
+  padding-top: var(--space-1);
+}
+
+.plantasia-transport .btn {
+  flex: 1;
+  max-width: 120px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  min-height: 39px;
+}
+
+.plantasia-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  grid-column: 1 / -1;
+  justify-content: center;
+}
+
+.plantasia-actions .btn {
+  flex: 1 1 auto;
+  min-width: 72px;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  min-height: 36px;
+}
+
+/* Collapse toggle for mobile */
+.plantasia-controls-toggle {
+  display: none;
+  width: 100%;
+  margin-bottom: var(--space-2);
+}
+
+.plantasia-controls__body.is-collapsed {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .plantasia-controls {
+    max-height: 50vh;
+    padding: var(--space-2);
+  }
+
+  .plantasia-controls__grid {
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: var(--space-1);
+  }
+
+  .plantasia-header__title {
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (max-width: 500px) {
+  .plantasia-controls-toggle {
+    display: block;
+  }
+
+  .plantasia-controls__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .plantasia-control--wide {
+    grid-column: 1 / -1;
+  }
+
+  .plantasia-transport {
+    flex-direction: row;
+  }
+
+  .plantasia-transport .btn {
+    max-width: none;
+  }
+
+  #toggleLegend {
+    top: var(--space-2);
+    right: var(--space-2);
+    font-size: var(--font-size-xs);
+    padding: var(--space-1) var(--space-2);
+  }
+
+  #midiLegend {
+    top: calc(var(--space-2) + 2rem);
+    right: var(--space-2);
+    font-size: 0.625rem;
+  }
+
+  .legend-item {
+    min-width: 34px;
+    font-size: 0.5625rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plantasia-header__status-dot.is-playing {
+    animation: none;
+  }
+}

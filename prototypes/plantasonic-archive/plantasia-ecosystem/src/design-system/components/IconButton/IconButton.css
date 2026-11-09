@@ -1,0 +1,58 @@
+/* IconButton — square icon-only action. */
+.pl-iconbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: var(--border-width-thin) solid transparent;
+  color: var(--color-text-secondary);
+  transition:
+    background-color var(--duration-base) var(--ease-organic),
+    color var(--duration-base) var(--ease-organic),
+    border-color var(--duration-base) var(--ease-organic),
+    box-shadow var(--duration-base) var(--ease-organic),
+    transform var(--duration-fast) var(--ease-organic);
+}
+
+.pl-iconbtn:hover:not(:disabled) {
+  background-color: var(--color-accent-soft);
+  color: var(--color-text-primary);
+}
+
+.pl-iconbtn:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.pl-iconbtn:disabled {
+  opacity: var(--opacity-muted);
+  cursor: not-allowed;
+}
+
+.pl-iconbtn--sm {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+.pl-iconbtn--md {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+.pl-iconbtn--lg {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.pl-iconbtn--solid {
+  background-color: var(--color-surface-2);
+  border-color: var(--color-border-default);
+}
+
+.pl-iconbtn--outline {
+  border-color: var(--color-border-default);
+}
+
+.pl-iconbtn--active {
+  background-color: var(--color-accent-soft);
+  color: var(--color-text-accent);
+  border-color: var(--color-border-accent);
+  box-shadow: var(--glow-sm);
+}

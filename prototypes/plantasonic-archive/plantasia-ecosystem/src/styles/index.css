@@ -1,0 +1,19 @@
+/**
+ * Plantasia — Master stylesheet entry point.
+ *
+ * Load order is significant:
+ *   1. Bootstrap (structure/utilities) + Bootstrap Icons font
+ *   2. Design tokens (CSS variables — single source of truth)
+ *   3. Bootstrap overrides (remap Bootstrap vars onto our tokens)
+ *   4. Reset, global base, animations, utilities
+ */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'bootstrap-icons/font/bootstrap-icons.css';
+
+@import '../design-system/tokens/index.css';
+
+@import './bootstrap-overrides.css';
+@import './reset.css';
+@import './global.css';
+@import './animations.css';
+@import './utilities.css';

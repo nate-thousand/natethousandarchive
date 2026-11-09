@@ -1,0 +1,48 @@
+/* BottomControls — performance bar. */
+.bottom-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  height: 100%;
+  padding: 0 var(--space-lg);
+  border-top: var(--border-width-hairline) solid var(--color-border-subtle);
+}
+
+.bottom-controls__transport {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.bottom-controls__sliders {
+  display: flex;
+  flex: 1;
+  gap: var(--space-xl);
+  max-width: 40rem;
+}
+
+.bottom-controls__slider {
+  flex: 1;
+}
+
+.bottom-controls__mutate {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .bottom-controls__mutate {
+    display: inline-flex;
+  }
+}
+
+/* On very small screens, keep only the primary slider visible. */
+@media (max-width: 575px) {
+  .bottom-controls {
+    gap: var(--space-md);
+    padding: 0 var(--space-md);
+  }
+
+  .bottom-controls__sliders .bottom-controls__slider:last-child {
+    display: none;
+  }
+}

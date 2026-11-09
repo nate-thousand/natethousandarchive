@@ -1,0 +1,60 @@
+/* Switch — accessible toggle. */
+.pl-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+}
+
+.pl-switch__track {
+  position: relative;
+  width: 2.25rem;
+  height: 1.25rem;
+  border-radius: var(--radius-pill);
+  background-color: var(--color-surface-3);
+  border: var(--border-width-thin) solid var(--color-border-default);
+  transition:
+    background-color var(--duration-base) var(--ease-organic),
+    border-color var(--duration-base) var(--ease-organic),
+    box-shadow var(--duration-base) var(--ease-organic);
+}
+
+.pl-switch__thumb {
+  position: absolute;
+  top: 50%;
+  left: 0.15rem;
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: var(--radius-circle);
+  background-color: var(--color-text-secondary);
+  transform: translateY(-50%);
+  transition:
+    transform var(--duration-base) var(--ease-bloom),
+    background-color var(--duration-base) var(--ease-organic);
+}
+
+.pl-switch__input:checked + .pl-switch__track {
+  background-color: var(--color-accent-soft);
+  border-color: var(--color-border-accent);
+  box-shadow: var(--glow-sm);
+}
+
+.pl-switch__input:checked + .pl-switch__track .pl-switch__thumb {
+  transform: translate(1rem, -50%);
+  background-color: var(--color-accent);
+}
+
+.pl-switch__input:focus-visible + .pl-switch__track {
+  outline: var(--border-width-thick) solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.pl-switch__label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.pl-switch--disabled {
+  opacity: var(--opacity-muted);
+  pointer-events: none;
+}

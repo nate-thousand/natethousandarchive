@@ -1,0 +1,96 @@
+/**
+ * Plantasia — Token-driven utility classes.
+ *
+ * Small, composable helpers for the signature surfaces (glass panels, glow,
+ * gradient text, hairline borders). These exist so components stay free of
+ * inline styles and magic numbers.
+ */
+
+/* Glass / frosted surface */
+.surface-glass {
+  background-image: var(--gradient-glass);
+  background-color: var(--color-surface-overlay);
+  backdrop-filter: blur(var(--blur-md));
+  -webkit-backdrop-filter: blur(var(--blur-md));
+  border: var(--border-width-thin) solid var(--color-border-subtle);
+}
+
+.surface-panel {
+  background-color: var(--color-surface-1);
+  border: var(--border-width-thin) solid var(--color-border-subtle);
+}
+
+/* Hairline borders */
+.border-hairline {
+  border: var(--border-width-hairline) solid var(--color-border-default);
+}
+
+.border-top-hairline {
+  border-top: var(--border-width-hairline) solid var(--color-border-default);
+}
+
+/* Glow helpers */
+.glow-sm {
+  box-shadow: var(--glow-sm);
+}
+.glow-md {
+  box-shadow: var(--glow-md);
+}
+.glow-lg {
+  box-shadow: var(--glow-lg);
+}
+
+.text-glow {
+  text-shadow: var(--glow-text);
+}
+
+/* Gradient text (the accent shimmer) */
+.text-gradient {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Tracking / eyebrow label */
+.eyebrow {
+  font-size: var(--font-size-2xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-widest);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.text-muted-token {
+  color: var(--color-text-muted);
+}
+
+.text-accent-token {
+  color: var(--color-text-accent);
+}
+
+/* Full-bleed flex fill */
+.fill {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Responsive auto-fit card grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: var(--space-lg);
+}
+
+.card-grid--wide {
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+}
+
+/* Vertical stack helper */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}

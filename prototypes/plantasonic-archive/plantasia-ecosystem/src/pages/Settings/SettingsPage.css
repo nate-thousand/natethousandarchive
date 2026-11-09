@@ -1,0 +1,19 @@
+/* SettingsPage. */
+.settings__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.settings__label {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.settings__stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}

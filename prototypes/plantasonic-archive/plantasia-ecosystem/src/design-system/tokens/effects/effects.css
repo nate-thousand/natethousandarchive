@@ -1,0 +1,57 @@
+/**
+ * Plantasia — Effect tokens: elevation, blur, glow, opacity & gradients.
+ *
+ * The aesthetic relies on subtle bloom, soft shadows, atmospheric blur, and
+ * faint gradients rather than hard edges. Shadows are tinted with the deep
+ * background so they read as depth-in-darkness, not drop shadows.
+ */
+:root {
+  /* Elevation (soft, dark-tinted shadows) */
+  --elevation-0: none;
+  --elevation-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --elevation-2: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --elevation-3: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --elevation-4: 0 20px 60px rgba(0, 0, 0, 0.55);
+
+  /* Glow / bloom (the signature accent halo) */
+  --glow-none: none;
+  --glow-sm: 0 0 8px rgba(183, 211, 106, 0.18);
+  --glow-md: 0 0 18px rgba(183, 211, 106, 0.25);
+  --glow-lg: 0 0 36px rgba(183, 211, 106, 0.32);
+  --glow-bloom: 0 0 64px rgba(199, 224, 138, 0.28);
+  --glow-text: 0 0 12px rgba(199, 224, 138, 0.35);
+
+  /* Blur — for glass panels and atmospheric depth */
+  --blur-none: 0;
+  --blur-sm: 6px;
+  --blur-md: 14px;
+  --blur-lg: 28px;
+  --blur-xl: 48px;
+
+  /* Opacity scale */
+  --opacity-0: 0;
+  --opacity-faint: 0.04;
+  --opacity-subtle: 0.08;
+  --opacity-soft: 0.16;
+  --opacity-muted: 0.4;
+  --opacity-strong: 0.64;
+  --opacity-emphasis: 0.82;
+  --opacity-full: 1;
+
+  /* Gradients — soft, organic atmospheres */
+  --gradient-atmosphere: radial-gradient(
+    140% 120% at 50% 0%,
+    rgba(29, 51, 38, 0.5) 0%,
+    rgba(7, 10, 8, 0) 60%
+  );
+  --gradient-soil: linear-gradient(180deg, rgba(7, 10, 8, 0) 0%, rgba(5, 7, 6, 0.85) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--palette-lime-400), var(--palette-moss-400));
+  --gradient-glass: linear-gradient(
+    160deg,
+    rgba(143, 174, 132, 0.06) 0%,
+    rgba(143, 174, 132, 0.02) 100%
+  );
+
+  /* Grain — fine film grain overlay opacity */
+  --grain-opacity: 0.045;
+}

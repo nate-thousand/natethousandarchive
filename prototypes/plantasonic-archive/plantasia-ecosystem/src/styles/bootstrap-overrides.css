@@ -1,0 +1,80 @@
+/**
+ * Plantasia — Bootstrap override layer.
+ *
+ * Bootstrap 5.0.2 is used ONLY for its grid, layout, and utility classes. Its
+ * visual identity is fully neutralized here by remapping Bootstrap's own CSS
+ * variables (and a few component classes) onto Plantasia's token system. We do
+ * not use Bootstrap components' default look — buttons, cards, inputs, etc. are
+ * re-skinned by the design-system primitives instead.
+ */
+
+/* Remap Bootstrap's root variables onto Plantasia tokens */
+:root {
+  --bs-body-bg: var(--color-bg-base);
+  --bs-body-color: var(--color-text-primary);
+  --bs-body-font-family: var(--font-sans);
+  --bs-body-font-size: var(--font-size-md);
+  --bs-body-line-height: var(--line-height-normal);
+
+  --bs-primary: var(--color-accent);
+  --bs-secondary: var(--color-secondary);
+  --bs-success: var(--color-positive);
+  --bs-warning: var(--color-caution);
+  --bs-danger: var(--color-critical);
+  --bs-info: var(--color-info);
+
+  --bs-border-color: var(--color-border-default);
+  --bs-border-radius: var(--radius-md);
+  --bs-link-color: var(--color-text-accent);
+  --bs-link-hover-color: var(--color-accent-hover);
+
+  --bs-gutter-x: var(--space-xl);
+}
+
+/* Neutralize Bootstrap's reboot background/typography on core elements */
+body {
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+}
+
+/* Strip default visual styling from Bootstrap components we reuse structurally */
+.btn {
+  --bs-btn-border-radius: var(--radius-md);
+  box-shadow: none;
+}
+
+.btn:focus,
+.btn:focus-visible {
+  box-shadow: none;
+  outline: var(--border-width-thick) solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+
+.form-control,
+.form-select {
+  background-color: var(--color-surface-2);
+  border: var(--border-width-thin) solid var(--color-border-default);
+  color: var(--color-text-primary);
+  border-radius: var(--radius-md);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--color-surface-2);
+  border-color: var(--color-border-accent);
+  color: var(--color-text-primary);
+  box-shadow: none;
+}
+
+.form-control::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Dropdown / modal surfaces inherit our atmosphere */
+.dropdown-menu,
+.modal-content {
+  background-color: var(--color-surface-2);
+  border: var(--border-width-thin) solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-primary);
+}

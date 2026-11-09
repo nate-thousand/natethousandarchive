@@ -1,0 +1,26 @@
+:root {
+  --plantasia-color-background: #081009;
+  --plantasia-color-surface: #0f1b10;
+  --plantasia-color-surface-elevated: rgba(18, 33, 19, 0.94);
+  --plantasia-color-text-primary: #e7f2df;
+  --plantasia-color-text-secondary: #a9baa2;
+  --plantasia-color-organism: #7fd88f;
+  --plantasia-color-root: #5fa873;
+  --plantasia-color-signal: #80d8c3;
+  --plantasia-color-energy: #d8c978;
+  --plantasia-color-border: rgba(183, 220, 166, 0.18);
+  --plantasia-color-border-strong: rgba(183, 220, 166, 0.32);
+
+  --plantasia-font-mono: "IBM Plex Mono", "Geist Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+  --plantasia-radius-sm: 0.25rem;
+  --plantasia-radius-md: 0.5rem;
+  --plantasia-radius-lg: 0.9rem;
+
+  --plantasia-space-1: 0.25rem;
+  --plantasia-space-2: 0.5rem;
+  --plantasia-space-3: 1rem;
+  --plantasia-space-4: 1.5rem;
+  --plantasia-space-5: 2rem;
+  --plantasia-space-6: 3rem;
+}

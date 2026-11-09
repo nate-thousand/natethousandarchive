@@ -1,0 +1,18 @@
+---
+description: Keep AI work aligned with the Design OS methodology.
+alwaysApply: true
+---
+
+# Design OS Rule
+
+This repository is a lean toolkit, not a knowledge base.
+
+Before adding a file, folder, token, component, pattern, prompt, or agent, ask whether it is reusable across two or more unrelated products. If not, keep it in the product repository.
+
+Every project starts with three required artifacts:
+
+- `PROJECT_BRIEF.md`
+- `DESIGN_SYSTEM_MAP.md`
+- `PROJECT_RETRO.md`
+
+Do not generate application code unless the user explicitly asks for it.

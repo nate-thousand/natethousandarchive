@@ -1,0 +1,49 @@
+/* PerformancePage — immersive stage. */
+.performance {
+  min-height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: var(--space-3xl);
+  pointer-events: none;
+}
+
+.performance__overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  text-align: center;
+  pointer-events: auto;
+}
+
+.performance__name {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-light);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.performance__species {
+  font-style: italic;
+  color: var(--color-text-muted);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.performance__play {
+  margin-top: var(--space-md);
+}
+
+.performance__signal {
+  width: min(28rem, 80vw);
+  margin-top: var(--space-lg);
+}
+
+.performance__keyboard {
+  width: min(32rem, 90vw);
+  margin-top: var(--space-md);
+}
+
+.performance__panic {
+  margin-top: var(--space-sm);
+  opacity: 0.75;
+}

@@ -1,0 +1,21 @@
+/* Icon sizing — token-driven, no magic numbers. */
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.icon--sm {
+  font-size: var(--font-size-sm);
+}
+.icon--md {
+  font-size: var(--font-size-md);
+}
+.icon--lg {
+  font-size: var(--font-size-xl);
+}
+.icon--xl {
+  font-size: var(--font-size-3xl);
+}

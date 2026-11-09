@@ -1,0 +1,87 @@
+/**
+ * Plantasia — Semantic color tokens.
+ *
+ * Components consume ONLY these tokens, never the raw palette. This indirection
+ * lets us theme (dark / high-contrast) and re-skin without touching components.
+ * Tokens are grouped by role: surfaces, content, borders, accents, and the
+ * organism's living colors.
+ */
+:root,
+[data-theme='dark'] {
+  /* Backgrounds & surfaces (deepest -> raised) */
+  --color-bg-base: var(--palette-black-800);
+  --color-bg-sunken: var(--palette-black-900);
+  --color-surface-1: var(--palette-charcoal-700);
+  --color-surface-2: var(--palette-charcoal-600);
+  --color-surface-3: var(--palette-charcoal-500);
+  --color-surface-raised: var(--palette-forest-700);
+  --color-surface-overlay: rgba(7, 10, 8, 0.72);
+
+  /* Content / text */
+  --color-text-primary: var(--palette-white-300);
+  --color-text-secondary: var(--palette-white-500);
+  --color-text-muted: var(--palette-moss-400);
+  --color-text-disabled: var(--palette-moss-600);
+  --color-text-inverse: var(--palette-black-800);
+  --color-text-accent: var(--palette-lime-400);
+
+  /* Borders & dividers (very thin, very subtle) */
+  --color-border-subtle: rgba(143, 174, 132, 0.08);
+  --color-border-default: rgba(143, 174, 132, 0.14);
+  --color-border-strong: rgba(143, 174, 132, 0.28);
+  --color-border-accent: rgba(183, 211, 106, 0.45);
+
+  /* Accents — interactive + signal */
+  --color-accent: var(--palette-lime-500);
+  --color-accent-hover: var(--palette-lime-400);
+  --color-accent-active: var(--palette-lime-600);
+  --color-accent-soft: rgba(183, 211, 106, 0.12);
+  --color-secondary: var(--palette-moss-400);
+  --color-secondary-soft: rgba(111, 143, 106, 0.12);
+
+  /* Status (desaturated, organic) */
+  --color-positive: var(--palette-lime-500);
+  --color-caution: var(--palette-amber-500);
+  --color-critical: var(--palette-rose-500);
+  --color-info: var(--palette-cyan-500);
+
+  /* Focus ring */
+  --color-focus-ring: rgba(199, 224, 138, 0.6);
+
+  /* Living organism colors (consumed by the renderer) */
+  --color-organism-root: var(--palette-forest-400);
+  --color-organism-branch: var(--palette-moss-500);
+  --color-organism-leaf: var(--palette-moss-300);
+  --color-organism-bloom: var(--palette-lime-400);
+  --color-organism-spore: var(--palette-lime-300);
+  --color-organism-signal: var(--palette-lime-500);
+  --color-organism-node: var(--palette-white-300);
+
+  /* Scrollbar */
+  --color-scrollbar-thumb: rgba(143, 174, 132, 0.18);
+  --color-scrollbar-track: transparent;
+}
+
+/**
+ * High-contrast theme — boosts borders, text, and accents for accessibility.
+ * Activated via [data-theme='high-contrast'] on the <html> element.
+ */
+[data-theme='high-contrast'] {
+  --color-bg-base: var(--palette-black-900);
+  --color-surface-1: var(--palette-black-700);
+  --color-surface-2: var(--palette-charcoal-600);
+  --color-surface-3: var(--palette-charcoal-400);
+
+  --color-text-primary: var(--palette-white-200);
+  --color-text-secondary: var(--palette-white-300);
+  --color-text-muted: var(--palette-moss-300);
+
+  --color-border-subtle: rgba(199, 224, 138, 0.3);
+  --color-border-default: rgba(199, 224, 138, 0.5);
+  --color-border-strong: rgba(199, 224, 138, 0.8);
+  --color-border-accent: var(--palette-lime-300);
+
+  --color-accent: var(--palette-lime-300);
+  --color-accent-hover: var(--palette-lime-400);
+  --color-focus-ring: var(--palette-lime-200, #e9f4c8);
+}

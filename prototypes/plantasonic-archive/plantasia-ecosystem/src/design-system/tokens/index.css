@@ -1,0 +1,12 @@
+/**
+ * Plantasia — Token aggregator.
+ *
+ * Single import surface for the entire token layer. Order matters: the raw
+ * palette must load before semantic tokens that reference it.
+ */
+@import './colors/palette.css';
+@import './colors/semantic.css';
+@import './typography/typography.css';
+@import './spacing/spacing.css';
+@import './motion/motion.css';
+@import './effects/effects.css';

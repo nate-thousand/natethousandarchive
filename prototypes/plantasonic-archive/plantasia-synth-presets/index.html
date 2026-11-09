@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Plantasia App v3 – Full Working Build with Advanced Presets</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      color: white;
+      font-family: monospace;
+      overflow: hidden;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+    }
+    .ui {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      z-index: 2;
+    }
+    .ui label {
+      font-size: 10px;
+      display: block;
+      text-align: center;
+    }
+    .ui select,
+    .ui input[type="range"] {
+      width: 90px;
+      background: black;
+      color: white;
+      border: 1px solid white;
+      font-size: 10px;
+    }
+    .ui select option {
+      background: black;
+      color: white;
+    }
+    .ui input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 4px;
+      margin: 4px 0;
+    }
+    .ui input[type="range"]::-webkit-slider-runnable-track {
+      height: 4px;
+      background: white;
+    }
+    .ui input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+      margin-top: -4px;
+      cursor: pointer;
+    }
+    .ui input[type="range"]::-moz-range-track {
+      height: 4px;
+      background: white;
+    }
+    .ui input[type="range"]::-moz-range-thumb {
+      width: 12px;
+      height: 12px;
+      background: white;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .ui button {
+      font-size: 12px;
+      padding: 4px 8px;
+      background: transparent;
+      border: 1px solid white;
+      color: white;
+      cursor: pointer;
+    }
+    #infoDisplay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 3;
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      font-size: 12px;
+      padding: 10px;
+      display: none;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="waveCanvas"></canvas>
+  <div id="infoDisplay"></div>
+  <div class="ui">
+    <div><label>Preset</label>
+      <select id="preset">
+        <option>Root Phonotropism</option>
+        <option>Germination Kickstart</option>
+        <option>Biomass Builder</option>
+        <option>Hormonal Harmony</option>
+        <option>Leaf Resonance</option>
+        <option>Algal Bloom</option>
+        <option>Leaf Growth Accelerator</option>
+        <option>Nectar Boost</option>
+        <option>Cereal Sprout</option>
+        <option>Fruiting Uplift</option>
+        <option>Buzz Pollination</option>
+        <option>Alyssum Sprouter Surround</option>
+      </select>
+    </div>
+    <div><label>Delay</label><input type="range" id="delay" min="0.01" max="2.0" step="0.01" value="0.6" /></div>
+    <div><label>Echo</label><input type="range" id="echo" min="0" max="1.0" step="0.01" value="0.4" /></div>
+    <div><label>Filter</label><input type="range" id="filter" min="100" max="8000" step="10" value="1200" /></div>
+    <div><label>Freq</label><input type="range" id="freq" min="50" max="1000" step="1" value="174" /></div>
+    <div><label>Vol</label><input type="range" id="volume" min="0" max="100" value="60" /></div>
+    <div><label>BPM</label><input type="range" id="bpm" min="40" max="180" value="90" /></div>
+    <button id="play">PLAY</button>
+    <button id="stop">STOP</button>
+    <button id="toggleDisplay">TOGGLE DATA</button>
+  </div>
+
+  <script>
+    // Core Setup
+    let audioCtx, analyser, masterGain, reverbNode, bufferLength, dataArray;
+    let bpm = 90, bpmTimer = null, stopped = true;
+    let trailFrames = [], currentWaveColor = "#00FF7F";
+    let canvas, ctx;
+
+    // Visual constants
+    const VISUAL_FRAMES     = 12;
+    const VISUAL_ALPHA_BASE = 0.05;
+    const VISUAL_ALPHA_MAX  = 0.2;
+
+    // Pentatonic scale for all presets
+    const plantPentatonic = [174, 220, 261, 329, 392];
+
+    // Advanced Preset Settings on pentatonic
+    const presetSettings = {
+      "Root Phonotropism":         { scale: plantPentatonic, color: "#00FF7F" },
+      "Germination Kickstart":     { scale: plantPentatonic, color: "#A0522D" },
+      "Biomass Builder":           { scale: plantPentatonic, color: "#228B22" },
+      "Hormonal Harmony":          { scale: plantPentatonic, color: "#FFD700" },
+      "Leaf Resonance":            { scale: plantPentatonic, color: "#008000" },
+      "Algal Bloom":               { scale: plantPentatonic, color: "#00FA9A" },
+      "Leaf Growth Accelerator":   { scale: plantPentatonic, color: "#7CFC00" },
+      "Nectar Boost":              { scale: plantPentatonic, color: "#FF69B4" },
+      "Cereal Sprout":             { scale: plantPentatonic, color: "#F4A460" },
+      "Fruiting Uplift":           { scale: plantPentatonic, color: "#FF4500" },
+      "Buzz Pollination":          { scale: plantPentatonic, color: "#FFFF00" },
+      "Alyssum Sprouter Surround": { scale: plantPentatonic, color: "#EE82EE" }
+    };
+
+    function getScaleFromPreset(val) {
+      return presetSettings[val]?.scale || plantPentatonic;
+    }
+    function getColorFromPreset(val) {
+      return presetSettings[val]?.color || "#FFFFFF";
+    }
+
+    function initAudio() {
+      if (audioCtx) return;
+      canvas = document.getElementById("waveCanvas");
+      ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 2048;
+      bufferLength = analyser.frequencyBinCount;
+      dataArray = new Uint8Array(bufferLength);
+
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = parseFloat(volume.value)/100;
+
+      // Short, warm reverb tail
+      reverbNode = audioCtx.createDelay();
+      const reverbFeedback = audioCtx.createGain();
+      reverbNode.delayTime.value = 0.3;
+      reverbFeedback.gain.value  = 0.3;
+      reverbNode.connect(reverbFeedback);
+      reverbFeedback.connect(reverbNode);
+      reverbNode.connect(masterGain);
+
+      masterGain.connect(audioCtx.destination);
+      animate();
+    }
+
+    function playTone(freq) {
+      const now = audioCtx.currentTime;
+      const filterNode = audioCtx.createBiquadFilter();
+      filterNode.type = "lowpass";
+      filterNode.frequency.value = parseFloat(filter.value);
+
+      const delayNode = audioCtx.createDelay();
+      delayNode.delayTime.value = parseFloat(delay.value);
+      const feedbackNode = audioCtx.createGain();
+      feedbackNode.gain.value = parseFloat(echo.value);
+
+      const gainNode = audioCtx.createGain();
+      gainNode.gain.setValueAtTime(0, now);
+      gainNode.gain.linearRampToValueAtTime(0.2, now + 1.0);
+      gainNode.gain.setValueAtTime(0.2, now + 3.0);
+      gainNode.gain.linearRampToValueAtTime(0, now + 8.0);
+
+      const panNode = audioCtx.createStereoPanner();
+      panNode.pan.value = 0;
+
+      // 3-voice sine detune
+      [-0.2, 0, 0.2].forEach(offset => {
+        const o = audioCtx.createOscillator();
+        o.type = "sine";
+        o.frequency.value = freq * (1 + offset/100);
+        o.connect(gainNode);
+        o.start(now);
+        o.stop(now + 8.0);
+      });
+
+      // Warm sub-octave layer
+      const subGain = audioCtx.createGain();
+      subGain.gain.setValueAtTime(0.08, now);
+      const subOsc = audioCtx.createOscillator();
+      subOsc.type = "sine";
+      subOsc.frequency.value = freq / 2;
+      subOsc.connect(subGain).connect(gainNode);
+      subOsc.start(now);
+      subOsc.stop(now + 8.0);
+
+      // Gentle sawtooth harmonics
+      const sawGain = audioCtx.createGain();
+      sawGain.gain.setValueAtTime(0.05, now);
+      const saw = audioCtx.createOscillator();
+      saw.type = "sawtooth";
+      saw.frequency.value = freq;
+      saw.connect(sawGain).connect(gainNode);
+      saw.start(now);
+      saw.stop(now + 8.0);
+
+      gainNode.connect(panNode);
+      panNode.connect(filterNode);
+      filterNode.connect(delayNode);
+      delayNode.connect(feedbackNode);
+      feedbackNode.connect(delayNode);
+      delayNode.connect(reverbNode);
+      gainNode.connect(analyser);
+    }
+
+    function scheduleNotes(scale) {
+      clearInterval(bpmTimer);
+      bpmTimer = setInterval(() => {
+        if (!stopped) {
+          const freq = scale[Math.floor(Math.random() * scale.length)];
+          playTone(freq);
+        }
+      }, 60000 / bpm);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      analyser.getByteTimeDomainData(dataArray);
+      if (trailFrames.length > VISUAL_FRAMES) trailFrames.shift();
+      trailFrames.push([...dataArray]);
+
+      ctx.fillStyle = "rgba(0,0,0,0.1)";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+
+      const grad = ctx.createLinearGradient(0,0,canvas.width,0);
+      grad.addColorStop(0, currentWaveColor);
+      grad.addColorStop(1, "#000000");
+
+      trailFrames.forEach((data,t) => {
+        ctx.beginPath();
+        let x = 0, slice = canvas.width / data.length;
+        data.forEach((v,i) => {
+          const y = ((v-128)/128)*(canvas.height/2*0.9)+canvas.height/2;
+          i === 0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+          x += slice;
+        });
+        ctx.strokeStyle = grad;
+        ctx.globalAlpha = VISUAL_ALPHA_BASE + (t / trailFrames.length) * VISUAL_ALPHA_MAX;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = currentWaveColor;
+        ctx.stroke();
+      });
+
+      ctx.globalAlpha = 1.0;
+      ctx.shadowBlur = 0;
+    }
+
+    // Event Listeners
+    document.getElementById('play').addEventListener('click', () => {
+      initAudio();
+      stopped = false;
+      currentWaveColor = getColorFromPreset(preset.value);
+      scheduleNotes(getScaleFromPreset(preset.value));
+    });
+    document.getElementById('stop').addEventListener('click', () => {
+      stopped = true;
+      clearInterval(bpmTimer);
+    });
+    document.getElementById('bpm').addEventListener('input', e => {
+      bpm = parseInt(e.target.value);
+      if (!stopped) scheduleNotes(getScaleFromPreset(preset.value));
+    });
+    document.getElementById('preset').addEventListener('change', () => {
+      currentWaveColor = getColorFromPreset(preset.value);
+      if (!stopped) scheduleNotes(getScaleFromPreset(preset.value));
+    });
+
+    // Display Toggle & Update
+    const display = document.getElementById("infoDisplay");
+    document.getElementById("toggleDisplay").addEventListener("click", () => {
+      display.style.display = display.style.display === "none" ? "block" : "none";
+    });
+    function updateDisplay() {
+      display.textContent =
+        "PRESET : " + preset.value + "\n" +
+        "DELAY  : " + delay.value + "\n" +
+        "ECHO   : " + echo.value + "\n" +
+        "FILTER : " + filter.value + "\n" +
+        "FREQ   : " + freq.value + "\n" +
+        "VOL    : " + volume.value + "\n" +
+        "BPM    : " + bpm;
+    }
+    setInterval(updateDisplay, 250);
+  </script>
+</body>
+</html>

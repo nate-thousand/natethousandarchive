@@ -1,0 +1,46 @@
+/* DocsPage — translation table. */
+.docs-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.docs-table th,
+.docs-table td {
+  text-align: left;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: var(--border-width-hairline) solid var(--color-border-subtle);
+}
+
+.docs-table thead th {
+  font-size: var(--font-size-2xs);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+.docs-table tbody tr {
+  transition: background-color var(--duration-base) var(--ease-organic);
+}
+
+.docs-table tbody tr:hover {
+  background-color: var(--color-accent-soft);
+}
+
+.docs-table__garden {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--color-text-accent);
+  font-weight: var(--font-weight-medium);
+}
+
+.docs-table__synth {
+  font-family: var(--font-mono);
+  color: var(--color-text-primary);
+}
+
+.docs-table__meaning {
+  color: var(--color-text-secondary);
+}

@@ -1,0 +1,185 @@
+/**
+ * Plantastic site styles
+ * Uses Foundation design tokens from foundation/bootstrap/CUSTOM.css
+ */
+
+@import url('foundation/bootstrap/CUSTOM.css');
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-primary);
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  font-weight: 700;
+}
+
+h1 { font-size: var(--font-size-lg); letter-spacing: 0.06em; text-transform: uppercase; }
+
+/* Paragraphs and Lists */
+p {
+  margin: 0 0 1em 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+ul, ol {
+  margin: 0 0 1em 0;
+  padding-left: 1.5em;
+  color: var(--color-text-secondary);
+}
+
+/* Links */
+a {
+  color: var(--color-text-link);
+  text-decoration: none;
+  transition: color 0.15s;
+  font-weight: 600;
+}
+
+a:hover {
+  color: var(--color-primary-muted);
+  text-decoration: underline;
+}
+
+/* Navigation */
+nav {
+  background: var(--color-surface-raised);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  gap: var(--space-3);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+nav a {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+nav a:hover {
+  color: var(--color-primary);
+}
+
+/* Main Content */
+main {
+  max-width: 720px;
+  margin: var(--space-5) auto;
+  background: var(--color-surface-raised);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--color-border-subtle);
+}
+
+/* Buttons */
+button, .button, a.button {
+  display: inline-block;
+  background: var(--color-surface-sunken);
+  color: var(--color-text-primary);
+  padding: 0.65em 1.4em;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  border: 1.5px solid var(--color-border-default);
+  cursor: pointer;
+}
+
+button:hover, .button:hover, a.button:hover {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: var(--color-text-secondary);
+}
+
+/* Project list */
+#project-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-item {
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.project-item:last-child {
+  border-bottom: none;
+}
+
+.project-number {
+  display: inline-block;
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  margin-right: var(--space-2);
+  min-width: 2rem;
+}
+
+.project-title {
+  font-weight: 700;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+}
+
+.project-title:hover {
+  color: var(--color-primary);
+}
+
+.project-description {
+  margin-top: var(--space-1);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  padding-left: calc(2rem + var(--space-2));
+}
+
+.project-description-block h2,
+.project-description-block h3 {
+  color: var(--color-primary);
+  font-size: var(--font-size-base);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.project-description-block strong {
+  color: var(--color-text-primary);
+}
+
+.featured-app {
+  background: var(--color-surface-sunken);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  margin: var(--space-4) 0;
+}
+
+.featured-app a {
+  font-size: var(--font-size-lg);
+}
+
+@media (max-width: 600px) {
+  main {
+    margin: var(--space-3);
+    padding: var(--space-3);
+  }
+}

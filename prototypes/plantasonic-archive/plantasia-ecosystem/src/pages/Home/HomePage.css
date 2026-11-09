@@ -1,0 +1,31 @@
+/* HomePage — landing. */
+.home__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.home__highlights {
+  margin-top: var(--space-xl);
+}
+
+.home__highlight {
+  text-align: left;
+}
+
+.home__highlight-icon {
+  display: inline-flex;
+  color: var(--color-text-accent);
+  margin-bottom: var(--space-md);
+}
+
+.home__highlight-title {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--space-sm);
+}
+
+.home__highlight-body {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  font-size: var(--font-size-sm);
+}

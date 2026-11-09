@@ -1,0 +1,92 @@
+/* LeftSidebar — cultivation rail. */
+.left-sidebar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-right: var(--border-width-hairline) solid var(--color-border-subtle);
+}
+
+.left-sidebar__scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-lg) var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.left-sidebar__group-label {
+  padding: 0 var(--space-sm) var(--space-xs);
+}
+
+.left-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.left-sidebar__link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  border: var(--border-width-thin) solid transparent;
+  transition:
+    background-color var(--duration-base) var(--ease-organic),
+    color var(--duration-base) var(--ease-organic);
+}
+
+.left-sidebar__link:hover {
+  background-color: var(--color-accent-soft);
+  color: var(--color-text-primary);
+}
+
+.left-sidebar__link--active {
+  background-color: var(--color-accent-soft);
+  color: var(--color-text-accent);
+  border-color: var(--color-border-accent);
+}
+
+.left-sidebar__species {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-xs);
+}
+
+.left-sidebar__species-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  border: var(--border-width-hairline) solid var(--color-border-subtle);
+  background-color: var(--color-surface-2);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xs);
+  transition:
+    border-color var(--duration-base) var(--ease-organic),
+    color var(--duration-base) var(--ease-organic),
+    box-shadow var(--duration-base) var(--ease-organic);
+}
+
+.left-sidebar__species-btn:hover {
+  color: var(--color-text-primary);
+  border-color: var(--color-border-default);
+}
+
+.left-sidebar__species-btn--active {
+  color: var(--color-text-accent);
+  border-color: var(--color-border-accent);
+  box-shadow: var(--glow-sm);
+}
+
+.left-sidebar__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  border-top: var(--border-width-hairline) solid var(--color-border-subtle);
+}

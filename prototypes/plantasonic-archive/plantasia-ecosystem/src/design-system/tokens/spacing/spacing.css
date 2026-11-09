@@ -1,0 +1,60 @@
+/**
+ * Plantasia — Spacing, radius, border-width & z-index tokens.
+ *
+ * Spacing is an 8px-based scale (with 2/4px fine steps) to support the large
+ * negative-space aesthetic. Radius leans soft and organic. Z-index is tokenized
+ * so layering is intentional and conflict-free.
+ */
+:root {
+  /* Spacing scale */
+  --space-0: 0;
+  --space-px: 1px;
+  --space-2xs: 0.125rem; /* 2px */
+  --space-xs: 0.25rem; /* 4px */
+  --space-sm: 0.5rem; /* 8px */
+  --space-md: 0.75rem; /* 12px */
+  --space-lg: 1rem; /* 16px */
+  --space-xl: 1.5rem; /* 24px */
+  --space-2xl: 2rem; /* 32px */
+  --space-3xl: 3rem; /* 48px */
+  --space-4xl: 4rem; /* 64px */
+  --space-5xl: 6rem; /* 96px */
+  --space-6xl: 8rem; /* 128px */
+
+  /* Radius — soft, organic corners */
+  --radius-none: 0;
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 18px;
+  --radius-2xl: 28px;
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+
+  /* Border widths — very thin throughout */
+  --border-width-hairline: 0.5px;
+  --border-width-thin: 1px;
+  --border-width-medium: 1.5px;
+  --border-width-thick: 2px;
+
+  /* Layout dimensions for the application shell */
+  --layout-topbar-height: 3.25rem;
+  --layout-bottombar-height: 5rem;
+  --layout-sidebar-width: 17rem;
+  --layout-sidebar-width-collapsed: 3.5rem;
+  --layout-rightpanel-width: 19rem;
+  --layout-content-max-width: 120rem;
+
+  /* Z-index scale */
+  --z-base: 0;
+  --z-canvas: 1;
+  --z-organism-overlay: 10;
+  --z-sticky: 100;
+  --z-shell: 200;
+  --z-dropdown: 300;
+  --z-overlay: 400;
+  --z-modal: 500;
+  --z-toast: 600;
+  --z-tooltip: 700;
+}
